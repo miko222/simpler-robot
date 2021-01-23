@@ -85,6 +85,11 @@
             </dependency>
             <dependency>
                 <groupId>love.forte.simple-robot</groupId>
+                <artifactId>api-event-data</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>love.forte.simple-robot</groupId>
                 <artifactId>core</artifactId>
                 <version>${project.version}</version>
             </dependency>
