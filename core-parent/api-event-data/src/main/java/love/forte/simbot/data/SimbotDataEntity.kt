@@ -1,22 +1,20 @@
 /*
  *
- *  * Copyright (c) 2021. ForteScarlet All rights reserved.
- *  * Project  simple-robot
- *  * File     MiraiAvatar.kt
+ *  * Copyright (c) 2020. ForteScarlet All rights reserved.
+ *  * Project  component-onebot
+ *  * File     SimbotDataEntity.kt
  *  *
  *  * You can contact the author through the following channels:
  *  * github https://github.com/ForteScarlet
  *  * gitee  https://gitee.com/ForteScarlet
  *  * email  ForteScarlet@163.com
  *  * QQ     1149159218
+ *  *
+ *  *
  *
  */
 
-@file:JvmName("EventData")
-package love.forte.simbot.api.events.data
-
-/*
-    Event data
- */
+@file:JvmName("SimbotDataEntity")
+package love.forte.simbot.data
 
 

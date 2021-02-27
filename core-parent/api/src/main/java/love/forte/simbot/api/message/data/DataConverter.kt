@@ -14,6 +14,7 @@
  *
  */
 
+@file:JvmName("DataConverters")
 package love.forte.simbot.api.message.data
 
 import love.forte.simbot.SimbotRuntimeException
@@ -36,6 +37,12 @@ public interface DataConverter<T> {
     fun convert(target: T): T
 
 }
+
+/**
+ * fun for `[DataConverter].invoke()` .
+ */
+public operator fun <T> DataConverter<T>.invoke(target: T): T = this.convert(target)
+
 
 
 /**
