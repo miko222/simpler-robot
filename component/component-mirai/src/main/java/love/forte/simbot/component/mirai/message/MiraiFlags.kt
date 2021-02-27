@@ -30,9 +30,12 @@ import net.mamoe.mirai.message.data.MessageSource
 public abstract class MiraiMessageSourceFlagContent : FlagContent {
     abstract val source: MessageSource?
     override val id: String
-        get() = source?.let { "${it.fromId}.${it.ids.joinToString(",")}.${it.internalIds.joinToString(",")}" } ?: "EmptyMiraiMessageFlagContent(source=null)"
+        // get() = source?.let { "${it.fromId}.${it.ids.joinToString(",")}.${it.internalIds.joinToString(",")}" } ?: "EmptyMiraiMessageFlagContent(source=null)"
+        get() = source?.let { it.cacheId } ?: "EmptyMiraiMessageFlagContent(source=null)"
 }
 
+
+public val MessageSource.cacheId get() = "${fromId}.${ids.joinToString(",")}.${internalIds.joinToString(",")}"
 
 
 private object EmptyMiraiGroupFlagContent : MiraiMessageSourceFlagContent(), GroupMsg.FlagContent {
@@ -72,7 +75,12 @@ public inline fun <C: MiraiMessageSourceFlagContent> miraiMessageFlag(flag: () -
 /**
  * mirai 消息标识。
  */
-public interface MiraiMessageFlag<C: MiraiMessageSourceFlagContent> : Flag<C>
+public interface MiraiMessageFlag<C: MiraiMessageSourceFlagContent> : Flag<C> {
+    /**
+     * 获取一个 [mirai消息标识主体][MiraiMessageSourceFlagContent].
+     */
+    override val flag: C
+}
 
 /**
  * 标识类型为 [MiraiMessageSourceFlagContent] 的 [Flag] 实例，

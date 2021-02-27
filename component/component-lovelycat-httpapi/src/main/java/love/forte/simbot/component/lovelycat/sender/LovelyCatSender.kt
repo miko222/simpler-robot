@@ -16,9 +16,9 @@
 
 package love.forte.simbot.component.lovelycat.sender
 
-import love.forte.catcode.CAT_HEAD
-import love.forte.catcode.CatCodeUtil
-import love.forte.catcode.codes.Nyanko
+import catcode.CAT_HEAD
+import catcode.CatCodeUtil
+import catcode.codes.Nyanko
 import love.forte.common.utils.Carrier
 import love.forte.simbot.api.message.MessageContent
 import love.forte.simbot.api.message.assists.Flag
@@ -27,6 +27,7 @@ import love.forte.simbot.api.message.events.PrivateMsg
 import love.forte.simbot.api.sender.Sender
 import love.forte.simbot.component.lovelycat.LovelyCatApiTemplate
 import love.forte.simbot.component.lovelycat.message.LovelyCatForSendMessageContent
+import love.forte.simbot.component.lovelycat.message.event.GROUP_SUFFIX
 
 
 private object Empty
@@ -45,7 +46,6 @@ public class LovelyCatSender(
      * 通过携带 catCode 的文本消息进行发送消息发送。
      */
     private fun sendMsg(target: String, msg: String) {
-
             val needAtCode: MutableList<String> = mutableListOf()
             var atAll = false
 
@@ -269,6 +269,10 @@ public class LovelyCatSender(
         return Carrier.empty()
     }
 
+    override fun sendGroupMsg(group: Long, msg: String): Carrier<out Flag<GroupMsg.FlagContent>> =
+        sendGroupMsg("$group$GROUP_SUFFIX", msg)
+
+
     /**
      * 发送一条群消息。回执必然为空。
      *
@@ -277,6 +281,10 @@ public class LovelyCatSender(
         sendMsg(group, msg)
         return Carrier.empty()
     }
+
+    override fun sendGroupMsg(group: Long, msg: MessageContent): Carrier<out Flag<GroupMsg.FlagContent>> =
+        sendGroupMsg("$group$GROUP_SUFFIX", msg)
+
 
 
 
@@ -336,6 +344,18 @@ public class LovelyCatSender(
         } ?: Carrier.get(false)
     }
 
+    override fun sendGroupNotice(
+        group: Long,
+        title: String?,
+        text: String?,
+        popUp: Boolean,
+        top: Boolean,
+        toNewMember: Boolean,
+        confirm: Boolean
+    ): Carrier<Boolean> =
+        sendGroupNotice("$group$GROUP_SUFFIX", title, text, popUp, top, toNewMember, confirm)
+
+
 
     /**
      * 不支持群签到。
@@ -344,6 +364,11 @@ public class LovelyCatSender(
     override fun sendGroupSign(group: String, title: String, message: String): Carrier<Boolean> {
         return def.sendGroupSign(group, title, message)
     }
+
+    @Suppress("DEPRECATION")
+    override fun sendGroupSign(group: Long, title: String, message: String): Carrier<Boolean> =
+        sendGroupSign("$group$GROUP_SUFFIX", title, message)
+
 }
 
 

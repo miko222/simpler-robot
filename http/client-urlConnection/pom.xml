@@ -5,7 +5,8 @@
     <parent>
         <artifactId>http-parent</artifactId>
         <groupId>love.forte.simple-robot.http</groupId>
-        <version>${simbot.project.version}</version><!--v-->
+        <version>2.0.1</version><!--v-->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,6 +29,12 @@
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>nothing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -36,6 +43,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>nothing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -44,6 +57,12 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>nothing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <skipStaging>true</skipStaging>
                     <skipLocalStaging>true</skipLocalStaging>
@@ -54,6 +73,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>nothing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -62,6 +87,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>nothing</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

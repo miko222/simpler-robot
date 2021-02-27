@@ -5,7 +5,8 @@
     <parent>
         <groupId>love.forte.simple-robot</groupId>
         <artifactId>component-parent</artifactId>
-        <version>${simbot.project.version}</version><!--v-->
+        <version>2.0.1</version><!--v-->
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +22,7 @@
     <url>https://github.com/ForteScarlet/simpler-robot/tree/dev/component/component-mirai</url>
 
     <properties>
-        <mirai.version>2.0.0</mirai.version>
+        <mirai.version>2.4.0</mirai.version>
         <mirai-login-solver-selenium.version>1.0-dev-6</mirai-login-solver-selenium.version>
     </properties>
 
@@ -107,7 +108,6 @@
     <repositories>
         <repository>
             <id>jcenter</id>
-            <name>JCenter</name>
             <url>https://jcenter.bintray.com/</url>
         </repository>
     </repositories>
@@ -115,7 +115,6 @@
     <pluginRepositories>
         <pluginRepository>
             <id>jcenter</id>
-            <name>JCenter</name>
             <url>https://jcenter.bintray.com/</url>
         </pluginRepository>
     </pluginRepositories>

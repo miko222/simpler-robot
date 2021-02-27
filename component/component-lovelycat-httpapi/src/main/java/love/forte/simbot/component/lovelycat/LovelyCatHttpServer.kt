@@ -14,6 +14,7 @@
  *
  */
 @file:JvmName("lovelycatHttpServers")
+
 package love.forte.simbot.component.lovelycat
 
 import io.ktor.application.*
@@ -29,12 +30,14 @@ import love.forte.simbot.bot.NoSuchBotException
 import love.forte.simbot.component.lovelycat.configuration.LovelyCatServerProperties
 import love.forte.simbot.component.lovelycat.message.event.LovelyCatParser
 import love.forte.simbot.core.TypedCompLogger
+import love.forte.simbot.listener.ListenResult
 import love.forte.simbot.listener.MsgGetProcessor
 import love.forte.simbot.listener.onMsg
 import love.forte.simbot.serialization.json.JsonSerializer
 import love.forte.simbot.serialization.json.JsonSerializerFactory
 import java.io.Closeable
-import kotlin.concurrent.thread
+import java.net.InetAddress
+import java.time.LocalDateTime
 import kotlin.reflect.jvm.jvmErasure
 
 
@@ -47,42 +50,49 @@ private val htmlContentType = ContentType.parse("text/html")
 private class JsonContentConverter(private val fac: JsonSerializerFactory) : ContentConverter {
 
     override suspend fun convertForReceive(
-        context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>
+        context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>,
     ): Any? {
         val channel = context.subject.value as ByteReadChannel
         val message = StringBuilder().apply {
             var readLine: Boolean
             do {
                 readLine = channel.readUTF8LineTo(this)
-            } while(readLine)
-            // while(content.readUTF8LineTo(this)) { }
+            } while (readLine)
             channel.cancel()
         }.toString()
-        // val message = channel.readUTF8Line() ?: "{}"
         return fac.getJsonSerializer(context.subject.typeInfo.jvmErasure.java).fromJson(message)
     }
 
     override suspend fun convertForSend(
         context: PipelineContext<Any, ApplicationCall>,
         contentType: ContentType,
-        value: Any
+        value: Any,
     ): Any? {
         val jsonSerializer: JsonSerializer<Any> = fac.getJsonSerializer(context.subject.javaClass)
         return jsonSerializer.toJson(context.subject)
     }
 
 
-
 }
 
 
 interface LovelyCatHttpServer : Closeable {
+    /**
+     * 启动可爱猫服务器。
+     */
     @Throws(Exception::class)
     fun start()
+
+    /**
+     * 关闭可爱猫服务器。
+     */
+    override fun close()
 }
 
 
-
+/**
+ * 可爱猫事件监听http server。
+ */
 public class LovelyCatKtorHttpServer(
     /** 类型转化函数，根据 'Event' 参数获取对应的解析对象 */
     lovelyCatParser: LovelyCatParser,
@@ -99,11 +109,68 @@ public class LovelyCatKtorHttpServer(
     private val port get() = lovelyCatServerProperties.port
     private val path get() = lovelyCatServerProperties.path
 
-    init {
-        Runtime.getRuntime().addShutdownHook(thread(start = false) {
-            close()
-        })
-    }
+    private var startedTime: LocalDateTime? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                showInfo =
+                    """
+                    <!DOCTYPE html>
+                    <html lang="zh-CN">
+                    <head>
+                    <title>Simbot Lovely Cat Server</title>
+                    <link rel="icon" type="image/png" sizes="144x144" href="https://gitee.com/ForteScarlet/simpler-robot/raw/dev/logo/logo-4@0,1x.png"/>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+                    </head>
+                    <body>
+                    <div class='row'>
+                          <div class="col-md-2  col-sm-0" ></div>
+                          <div class="col-md-8 col-sm-12">
+                              <div class="page-header">
+                                <h1>Lovely cat http server <small>by <a target='_blank' href='https://github.com/ForteScarlet/simpler-robot'>simbot</a></small></h1>
+                              </div>
+                              <div class="jumbotron">
+                                  <div class="container">
+                                    <h1>Lovely cat server enabled!</h1>
+                                    <p>Started time: ${value.toString().replaceFirst('T', ' ')}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-2  col-sm-0" ></div>
+                    </div>
+                    </body>
+                    </html>
+                """.trimIndent()
+            }
+        }
+
+    private var showInfo: String = """
+                    <!DOCTYPE html>
+                    <html lang="zh-CN">
+                    <head>
+                    <title>Simbot Lovely Cat Server</title>
+                    <link rel="icon" type="image/png" sizes="144x144" href="https://gitee.com/ForteScarlet/simpler-robot/raw/dev/logo/logo-4@0,1x.png"/>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+                    </head>
+                    <body>
+                    <div class='row'>
+                          <div class="col-md-2  col-sm-0" ></div>
+                          <div class="col-md-8 col-sm-12">
+                              <div class="page-header">
+                                <h1>Lovely cat http server <small>by <a target='_blank' href='https://github.com/ForteScarlet/simpler-robot'>simbot</a></small></h1>
+                              </div>
+                              <div class="jumbotron">
+                                <div class="container">
+                                    <h1>Lovely cat server enabled?</h1>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="col-md-2  col-sm-0" ></div>
+                    </div>
+                    </body>
+                    </html>
+                """.trimIndent()
+
 
     /**
      * the server instance.
@@ -115,7 +182,7 @@ public class LovelyCatKtorHttpServer(
                 register(jsonContentType, JsonContentConverter(jsonSerializerFactory))
             }
 
-            if(lovelyCatServerProperties.cors) {
+            if (lovelyCatServerProperties.cors) {
                 install(CORS)
             }
 
@@ -133,48 +200,70 @@ public class LovelyCatKtorHttpServer(
 
                         if (eventType == null) {
                             // 404. no event.
-                            call.respond(HttpStatusCode.NotFound) { "param 'Event' not found: Event is Empty." }
+                            call.respond(HttpStatusCode.NotFound, message = "Param 'Event' not found: Event is Empty.")
                         } else {
 
                             val botId = (params["robot_wxid"] ?: params["rob_wxid"])?.toString()
-                                ?: throw NoSuchBotException("no param 'robot_wxid' or 'rob_wxid' in lovelycat request param.")
+                                ?: throw NoSuchBotException("No param 'robot_wxid' or 'rob_wxid' in lovelycat request param.")
 
-                            val api = apiManager[botId] ?: throw IllegalStateException("cannot found Bot($botId)'s api template.")
+                            val api = apiManager[botId]
+                                ?: run {
+                                    val e = IllegalStateException("Cannot found Bot($botId)'s api template. This bot may not be registered.")
+                                    call.respond(HttpStatusCode.BadRequest, message = e.localizedMessage)
+                                    if (logger.isDebugEnabled) {
+                                        logger.error(e.localizedMessage, e)
+                                    } else {
+                                        logger.error(e.localizedMessage)
+                                    }
+                                    return@post
+                                }
 
                             try {
                                 // val parse =
                                 // if (parse != null) {
-                                    lovelyCatParser.type(eventType)?.let { t ->
+                                lovelyCatParser.type(eventType).let { t ->
+                                    if (t != null) {
                                         msgGetProcessor.onMsg(t) {
-                                            lovelyCatParser.parse(eventType, originalData, api, jsonSerializerFactory, params)
+                                            lovelyCatParser.parse(eventType,
+                                                originalData,
+                                                api,
+                                                jsonSerializerFactory,
+                                                params)
                                         }
-                                    }?.let {
-                                        // ok
-                                        call.respond(HttpStatusCode.OK, it.result ?: "{}")
-                                    } ?: kotlin.run {
-                                        val respMsg = "Cannot found any event type for event '$eventType'."
-                                        call.respond(HttpStatusCode.NotFound) { respMsg }
-                                        logger.warn("$respMsg response 404.")
+                                    } else {
+                                        val msg = lovelyCatParser.parse(eventType,
+                                            originalData,
+                                            api,
+                                            jsonSerializerFactory,
+                                            params)
+                                        msg?.let { m -> msgGetProcessor.onMsg(m::class.java) { m } ?: ListenResult }
                                     }
+
+                                }?.let {
+                                    // ok
+                                    call.respond(HttpStatusCode.OK, message = it.result ?: "{}")
+                                } ?: kotlin.run {
+                                    val respMsg = "Cannot found any event type for event '$eventType'."
+                                    call.respond(HttpStatusCode.NotFound, message = respMsg)
+                                    logger.warn("$respMsg response 404.")
+                                }
                                 // }
                                 // ok status.
                                 // call.respond(HttpStatusCode.OK)
                             } catch (e: Exception) {
-                                call.respond(HttpStatusCode.InternalServerError, e.toString())
+                                call.respond(HttpStatusCode.InternalServerError, message = e.toString())
                                 logger.error("Parse event instance failed by originalData: $originalData", e)
                             }
 
                         }
                     } catch (ex: Exception) {
-                        call.respond(HttpStatusCode.InternalServerError, ex.toString())
+                        call.respond(HttpStatusCode.InternalServerError, message = ex.toString())
                         logger.error("Internal server error.", ex)
                     }
                 }
 
                 get("/simbot/lovelyCat") {
-                    call.respondText(htmlContentType) {
-                        "<h2>lovely cat server enabled!</h2> "
-                    }
+                    call.respondText(htmlContentType) { showInfo }
 
                 }
 
@@ -184,10 +273,17 @@ public class LovelyCatKtorHttpServer(
     }
 
 
-
     override fun start() {
         server.start()
-        logger.info("lovelycat ktor server started on <address>:$port$path")
+        startedTime = LocalDateTime.now()
+        try {
+            val localHost = InetAddress.getLocalHost()
+            val address = localHost.hostAddress
+            logger.info("Lovelycat ktor server started on http://$address:$port$path")
+            logger.info("You can try visit http://$address:$port/simbot/lovelyCat for test.")
+        } catch (e: Exception) {
+            logger.info("Lovelycat ktor server started on http://<IP>:$port$path")
+        }
 
     }
 
@@ -195,7 +291,7 @@ public class LovelyCatKtorHttpServer(
      * close server.
      */
     override fun close() {
-        server.stop(5000, 5000)
+        server.stop(1000, 6000)
     }
 
 }

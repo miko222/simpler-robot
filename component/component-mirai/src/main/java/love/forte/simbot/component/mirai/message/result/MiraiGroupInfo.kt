@@ -20,7 +20,7 @@ import love.forte.simbot.api.message.results.GroupFullInfo
 import love.forte.simbot.api.message.results.GroupOwner
 import love.forte.simbot.api.message.results.SimpleGroupInfo
 import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.contact.isAdministrator
+import net.mamoe.mirai.contact.isOperator
 
 /**
  * mirai group info.
@@ -48,7 +48,7 @@ public class MiraiGroupFullInfo(group: Group) : GroupInfo by MiraiGroupInfo(grou
     override val maximum: Int = -1
 
     /** 群人数。 */
-    override val total: Int = group.members.size
+    override val total: Int = group.members.size + 1
 
     @Deprecated("无法获取建群时间。")
     override val createTime: Long = -1
@@ -66,9 +66,9 @@ public class MiraiGroupFullInfo(group: Group) : GroupInfo by MiraiGroupInfo(grou
      * 管理员与群主。
      */
     override val admins: List<GroupAdmin> by lazy(LazyThreadSafetyMode.PUBLICATION) {
-        (sequenceOf(owner) + group.members.asSequence()
-            .filter { it.isAdministrator() }
-            .map { MiraiGroupAdminInfo(it) }).toList()
+        group.members.asSequence()
+            .filter { it.isOperator() }
+            .map { MiraiGroupAdminInfo(it) }.toList()
     }
 
 

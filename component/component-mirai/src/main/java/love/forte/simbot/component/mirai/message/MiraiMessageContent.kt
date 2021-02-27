@@ -15,13 +15,13 @@
 
 package love.forte.simbot.component.mirai.message
 
+import catcode.CatCodeUtil
+import catcode.Neko
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import love.forte.catcode.CatCodeUtil
-import love.forte.catcode.Neko
 import love.forte.simbot.api.message.MessageContent
 import love.forte.simbot.component.mirai.sender.isNotEmptyMsg
 import love.forte.simbot.component.mirai.utils.toNeko
@@ -229,9 +229,18 @@ public data class MiraiNudgedMessageContent(private val target: Long?) :
  *
  * @author ForteScarlet -> https://github.com/ForteScarlet
  */
-public data class MiraiMessageChainContent(val message: MessageChain) : MiraiMessageContent() {
+public class MiraiMessageChainContent constructor(val message: MessageChain, cache: MiraiMessageCache? = null) : MiraiMessageContent() {
     override suspend fun getMessage(contact: Contact): Message = message
-    override val cats: List<Neko> by lazy(LazyThreadSafetyMode.PUBLICATION) { message.toNeko() }
+    // private lateinit var _cats: List<Neko>
+    override val cats: List<Neko> by lazy(LazyThreadSafetyMode.PUBLICATION) { message.toNeko(cache) }
+    // override val cats: List<Neko>
+    // get() {
+    //     if (!::_cats.isInitialized) {
+    //         _cats = message.toNeko(cache)
+    //     }
+    //     return _cats
+    // }
+
     override fun equals(other: Any?): Boolean {
         if (other == null) {
             return false
@@ -242,6 +251,15 @@ public data class MiraiMessageChainContent(val message: MessageChain) : MiraiMes
 
         return false
     }
+    override fun hashCode(): Int {
+        return message.hashCode()
+    }
+
+    override fun toString(): String {
+        return "MiraiMessageChainContent(originalMessage=$message)"
+    }
+
+
 }
 
 
@@ -276,9 +294,12 @@ public data class MiraiSingleAtMessageContent(private val code: Long) : MiraiMes
  * mirai 的 image content，代表为通过本地上传的图片信息。
  * 此实现中，image仅会被实例化一次，而后则会被缓存。
  */
-public class MiraiImageMessageContent(
+public class MiraiImageMessageContent
+constructor(
     private val flash: Boolean = false,
     override val neko: Neko,
+    /** 是否优先上传到某个群。 */
+    // private val groupFirst: Boolean = false,
     private val imageFunction: suspend (Contact) -> Image,
 ) : MiraiMessageContent(), NekoAble {
 

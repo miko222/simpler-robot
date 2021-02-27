@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) 2020. ForteScarlet All rights reserved.
+ *  * Copyright (c) 2021. ForteScarlet All rights reserved.
  *  * Project  simple-robot
  *  * File     MiraiAvatar.kt
  *  *
@@ -12,15 +12,13 @@
  *
  */
 
-package love.forte.simbot.core
+package spbtest.interceptor;
 
+import org.springframework.stereotype.Component;
 
 /**
- * simbot启动的时候所使用的流程配置类，
- * 主要用于提供给 [SimbotProcess] 使用，
- * 不会被注入到依赖中。
+ * @author ForteScarlet
  */
-public class SimbotAppConfiguration {
-
-
+@Component
+public class MyProxy {
 }

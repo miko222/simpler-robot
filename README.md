@@ -1,5 +1,6 @@
+<!--suppress HtmlDeprecatedAttribute -->
 <div align="center">
-    <img src="./logo/logo-4@0,1x.png"/>
+    <img src="./logo/logo-4@0,1x.png" alt="logo"/>
     <h3>
         - simpler-robot -
     </h3>
@@ -15,23 +16,21 @@
     <small> &gt; 走过路过，不要忘记点亮一颗⭐喔~ &lt; </small> 
     <br>
 <a href="https://repo1.maven.org/maven2/love/forte/simple-robot/parent/" target="_blank">
-  <img src="https://img.shields.io/nexus/r/love.forte.simple-robot/parent?label=simbot-releases&server=https%3A%2F%2Foss.sonatype.org" /></a>
+  <img alt="release" src="https://img.shields.io/nexus/r/love.forte.simple-robot/parent?label=simbot-releases&server=https%3A%2F%2Foss.sonatype.org" /></a>
 <a href="https://oss.sonatype.org/content/repositories/snapshots/love/forte/simple-robot/parent/" target="_blank">
-  <img src="https://img.shields.io/nexus/s/love.forte.simple-robot/parent?label=simbot-snapshot&server=https%3A%2F%2Foss.sonatype.org" /></a>
+  <img alt="snapshot" src="https://img.shields.io/nexus/s/love.forte.simple-robot/parent?label=simbot-snapshot&server=https%3A%2F%2Foss.sonatype.org" /></a>
 <a href="https://www.yuque.com/simpler-robot/simpler-robot-doc" target="_blank">
-  <img src="https://img.shields.io/badge/doc-yuque-brightgreen" /></a>
+  <img alt=""doc src="https://img.shields.io/badge/doc-yuque-brightgreen" /></a>
    <hr>
-   <img src="https://img.shields.io/github/stars/ForteScarlet/simpler-robot" />
-   <img src="https://img.shields.io/github/forks/ForteScarlet/simpler-robot" />
-   <img src="https://img.shields.io/github/watchers/ForteScarlet/simpler-robot" />
-   <img src="https://img.shields.io/github/repo-size/ForteScarlet/simpler-robot" />
-   <img src="https://img.shields.io/tokei/lines/github/ForteScarlet/simpler-robot" />
-   <a href="https://github.com/ForteScarlet/simpler-robot/releases/latest"><img src="https://img.shields.io/github/v/release/ForteScarlet/simpler-robot" /></a>
-   <img src="https://img.shields.io/github/issues-closed/ForteScarlet/simpler-robot?color=green" />
-   <a href="./LICENSE"><img src="https://img.shields.io/github/license/ForteScarlet/simpler-robot" /></a>
-<br>
-   <img src="https://img.shields.io/github/last-commit/ForteScarlet/simpler-robot" />
-   <img src="https://img.shields.io/github/last-commit/ForteScarlet/simpler-robot" />
+   <img alt="stars" src="https://img.shields.io/github/stars/ForteScarlet/simpler-robot" />
+   <img alt="forks" src="https://img.shields.io/github/forks/ForteScarlet/simpler-robot" />
+   <img alt="watchers" src="https://img.shields.io/github/watchers/ForteScarlet/simpler-robot" />
+   <img alt="repo size" src="https://img.shields.io/github/repo-size/ForteScarlet/simpler-robot" />
+   <img alt="lines" src="https://img.shields.io/tokei/lines/github/ForteScarlet/simpler-robot" />
+   <a href="https://github.com/ForteScarlet/simpler-robot/releases/latest"><img alt="release" src="https://img.shields.io/github/v/release/ForteScarlet/simpler-robot" /></a>
+   <img alt="issues" src="https://img.shields.io/github/issues-closed/ForteScarlet/simpler-robot?color=green" />
+   <img alt="last commit" src="https://img.shields.io/github/last-commit/ForteScarlet/simpler-robot" />
+   <a href="./LICENSE"><img alt="license" src="https://img.shields.io/github/license/ForteScarlet/simpler-robot" /></a>
     </div>
 
 
@@ -80,6 +79,28 @@
 ## 文档
 
 simpler-robot文档：https://www.yuque.com/simpler-robot/simpler-robot-doc
+
+## Demo
+各个组件的Demo项目正在逐步建设。
+目前已经存在的Demo：
+- [原生simbot-mirai-demo](https://github.com/simple-robot/simbot-mirai-demo)
+
+
+## 新特性
+既然是相对于1.x版本的新版本，那么必然会有更优异的特性。
+
+- 更明确的实例定义。不再将较为混乱的各种方法堆在事件中，而是使用**容器**将他们整齐归类。
+- 更好的消息构建。提供更多的消息发送方式来适应各种场景下的消息发送效率。
+- 更高的效率。知识是需要沉淀的。每一次的版本更新都会比以往更多的考虑效率问题。
+- 更好的日志。日志整合`slf4j`api，可以无缝兼容其他任意`slf4j`下的日志框架。  
+- 更灵活的开发。降低核心、组件之间的强耦合，更多的借助IOC模块实现更灵活的开发与拓展。
+- 更灵活的配置。支持`properties`、`yaml` 类型配置的解析，同时也支持指定特定启动参数、通过网络获取在线配置文件等多种方式。  
+- 更灵活的事件监听。优化核心注解`@Listen`的使用。
+- 更灵活的事件过滤。优化核心注解`@Filter`的使用。
+- 分工更明确的模块。核心、组件、序列化、http客户端、定时任务...各司其职，并提供丰富的实现模块来减少你的项目冗余依赖量。
+- 更好的问题反馈。所有的官方模块都会汇总于此。开启一个 [issue](https://github.com/ForteScarlet/simpler-robot/issues) 来反馈问题的效率远远高于在群里茫然的提问。
+- 以及更多...
+
 
 ## 其他模块
 
