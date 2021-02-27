@@ -86,7 +86,7 @@ public interface MuteTimeContainer : Container {
  */
 public interface TimeContainer : Container {
     /**
-     * 获取时间。少数获取不到的情况下会返回`-1`, 但是一般大多数情况以当前时间戳代替。
+     * 获取时间。获取不到的情况下会返回`-1`。
      * 不出意外，此值代表毫秒值。
      */
     val time: Long
@@ -126,6 +126,7 @@ public interface TimeContainer : Container {
      */
     @JvmDefault
     fun <N> getTime(unit: TimeUnit.() -> ((Long) -> N)): N = unit(TimeUnit.MILLISECONDS)(time)
+
 
     companion object {
         @JvmSynthetic

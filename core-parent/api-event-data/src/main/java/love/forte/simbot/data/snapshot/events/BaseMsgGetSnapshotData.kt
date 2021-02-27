@@ -33,15 +33,18 @@ public data class MsgGetData(
     override val time: Long,
 ) : MsgGet, EventDataEntity {
     companion object : BaseFromData<MsgGet, MsgGetData>() {
-        override fun from(target: MsgGet): MsgGetData {
+        override fun MsgGet.from(): MsgGetData {
             return MsgGetData(
-                target.accountInfo,
-                target.botInfo,
-                target.originalData,
-                target.id,
-                target.text,
-                target.time
+                accountInfo,
+                botInfo,
+                originalData,
+                id,
+                text,
+                time
             )
         }
     }
 }
+
+
+

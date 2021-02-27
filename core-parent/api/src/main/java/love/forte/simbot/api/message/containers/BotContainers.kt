@@ -81,6 +81,7 @@ public interface BotInfo : Container,
     @JvmDefault
     override val accountCode: String
         get() = botCode
+
     @JvmDefault
     override val accountNickname: String
         get() = botName
@@ -88,6 +89,7 @@ public interface BotInfo : Container,
     @JvmDefault
     override val accountRemark: String?
         get() = null
+
     @JvmDefault
     override val accountAvatar: String?
         get() = botAvatar

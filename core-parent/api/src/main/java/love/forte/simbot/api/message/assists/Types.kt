@@ -16,6 +16,10 @@
 
 package love.forte.simbot.api.message.assists
 
+import love.forte.simbot.api.message.assists.ActionMotivations.PASSIVE
+import love.forte.simbot.api.message.assists.ActionMotivations.PROACTIVE
+import love.forte.simbot.api.message.data.DataEntity
+
 /*
  *
  * 此处定义一些非嵌套在接口中的类型. 所谓类型，一般都是指枚举
@@ -33,7 +37,7 @@ package love.forte.simbot.api.message.assists
  *
  * @property level 权限等级。等级越大，则代表其权限等级越高。
  */
-public enum class Permissions(public val level: Int) {
+public enum class Permissions(public val level: Int) : DataEntity {
     /**
      * 群主
      */
@@ -82,7 +86,7 @@ public enum class Permissions(public val level: Int) {
  *
  *
  */
-public enum class ActionMotivations {
+public enum class ActionMotivations : DataEntity {
     /** 主动的 */
     PROACTIVE,
     /** 被动的 */

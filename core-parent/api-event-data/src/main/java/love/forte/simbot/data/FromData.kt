@@ -21,9 +21,9 @@ import love.forte.simbot.api.message.data.DataConverter
 
 
 public interface FromData<T, D : T> : DataConverter<T> {
-    fun from(target: T): D
+    fun T.from(): D
 }
 
 public abstract class BaseFromData<T, D : T> : FromData<T, D>, DataConverter<T>, BaseDataConverter<T>() {
-    override fun doConvert(target: T): T = from(target)
+    override fun doConvert(target: T): T = target.from()
 }

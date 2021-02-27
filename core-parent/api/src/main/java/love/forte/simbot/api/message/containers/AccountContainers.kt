@@ -17,6 +17,7 @@
 package love.forte.simbot.api.message.containers
 
 import love.forte.simbot.annotation.ContainerType
+import love.forte.simbot.api.message.data.DataEntity
 
 
 /**
@@ -116,7 +117,7 @@ public fun emptyGroupAccountInfo() : GroupAccountInfo = EmptyAccountInfo
 public fun emptyFriendAccountInfo() : FriendAccountInfo = EmptyAccountInfo
 
 
-private object EmptyAccountInfo : AccountInfo, GroupAccountInfo, FriendAccountInfo {
+private object EmptyAccountInfo : AccountInfo, GroupAccountInfo, FriendAccountInfo, DataEntity {
     override val accountCode: String
         get() = ""
     override val accountNickname: String?
