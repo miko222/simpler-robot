@@ -15,6 +15,7 @@
  */
 
 @file:JvmName("BaseMsgGetSnapshotData")
+
 package love.forte.simbot.data.snapshot.events
 
 import love.forte.simbot.api.message.containers.AccountInfo
@@ -22,9 +23,12 @@ import love.forte.simbot.api.message.containers.BotInfo
 import love.forte.simbot.api.message.data.EventDataEntity
 import love.forte.simbot.api.message.events.MsgGet
 import love.forte.simbot.data.BaseFromData
+import love.forte.simbot.data.snapshot.containers.AccountInfoSnapshotData.Companion.from
+import love.forte.simbot.data.snapshot.containers.BotInfoSnapshotData.Companion.from
 
 
-public data class MsgGetData(
+public data class MsgGetData
+internal constructor(
     override val accountInfo: AccountInfo,
     override val botInfo: BotInfo,
     override val originalData: String,
@@ -35,8 +39,8 @@ public data class MsgGetData(
     companion object : BaseFromData<MsgGet, MsgGetData>() {
         override fun MsgGet.from(): MsgGetData {
             return MsgGetData(
-                accountInfo,
-                botInfo,
+                accountInfo.from(),
+                botInfo.from(),
                 originalData,
                 id,
                 text,

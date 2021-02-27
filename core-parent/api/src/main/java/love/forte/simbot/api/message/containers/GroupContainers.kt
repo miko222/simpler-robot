@@ -18,6 +18,7 @@
 package love.forte.simbot.api.message.containers
 
 import love.forte.simbot.annotation.ContainerType
+import love.forte.simbot.api.message.data.DataEntity
 
 
 /**
@@ -76,7 +77,7 @@ private data class SimpleGroupInfo(
     override val groupCode: String,
     override val groupName: String?,
     override val groupAvatar: String?,
-) : GroupInfo
+) : GroupInfo, DataEntity
 
 
 /**

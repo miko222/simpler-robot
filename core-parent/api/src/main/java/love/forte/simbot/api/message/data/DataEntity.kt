@@ -31,7 +31,9 @@ package love.forte.simbot.api.message.data
  *
  *
  */
-public interface DataEntity
+public interface DataEntity {
+    // val dataEntity: T
+}
 
 /**
  * 一个[事件消息][love.forte.simbot.api.message.events]的[数据类][DataEntity]标记接口。
