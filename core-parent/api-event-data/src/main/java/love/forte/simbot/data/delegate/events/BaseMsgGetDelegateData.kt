@@ -2,7 +2,7 @@
  *
  *  * Copyright (c) 2020. ForteScarlet All rights reserved.
  *  * Project  component-onebot
- *  * File     SimbotDataEntity.kt
+ *  * File     BaseMsgGetDelegateData.kt
  *  *
  *  * You can contact the author through the following channels:
  *  * github https://github.com/ForteScarlet
@@ -14,7 +14,7 @@
  *
  */
 
-@file:JvmName("SimbotDataEntity")
-package love.forte.simbot.data
+@file:JvmName("BaseMsgGetDelegateData")
+package love.forte.simbot.data.delegate.events
 
 
