@@ -65,7 +65,7 @@ interface OneBotEvent {
      * 收到事件的机器人 QQ 号
      *
      *
-     * `number(int64) -> string`
+     * `number(int64)`
      */
     val selfId: Long
 
