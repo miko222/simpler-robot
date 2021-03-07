@@ -375,6 +375,7 @@ public interface OneBotPokeSegment : OneBotMessageSegment {
     /**
      * 戳一戳类型，是`data.type`的值。
      *
+     *
      * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
      */
     val pokeType: String
@@ -382,11 +383,21 @@ public interface OneBotPokeSegment : OneBotMessageSegment {
     /**
      * 戳一戳id。
      *
+     *
      * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
      *
      */
     val id: String
 
+
+    /**
+     * 表情名。
+     *
+     *
+     * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
+     *
+     */
+    val name: String
 
 
 
