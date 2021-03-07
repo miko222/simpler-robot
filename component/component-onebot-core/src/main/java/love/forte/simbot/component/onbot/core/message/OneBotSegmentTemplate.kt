@@ -14,7 +14,7 @@
  *
  */
 
-@file:JvmName("OneBotMessageSegmentTemplate")
+@file:JvmName("OneBotMessageSegmentTemplates")
 package love.forte.simbot.component.onbot.core.message
 
 
@@ -36,7 +36,7 @@ public interface CacheableSegment {
     /**
      * 缓存值。
      */
-    val cache: Boolean
+    val cache: Boolean?
 }
 
 
@@ -49,7 +49,10 @@ public interface FileAbleSegment {
 }
 
 
-public val FileAbleSegment.fileType: FileType get() = FileType.byPrefix(file)
+/**
+ * 通过结果判断文件参数类型。
+ */
+public val FileAbleSegment.fileType: FileType get() = FileType.byValue(file)
 
 
 
@@ -124,7 +127,7 @@ public interface OneBotFaceSegment : OneBotMessageSegment {
  *
  *
  */
-public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment {
+public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment, FileAbleSegment {
     @JvmDefault
     override val type: String
         get() = "image"
@@ -136,7 +139,7 @@ public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment {
      * - `http://`
      * - `base64://`
      */
-    val file: String
+    override val file: String
 
 
     /**
@@ -153,7 +156,6 @@ public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment {
     /**
      * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
      */
-    @JvmDefault
     override val cache: Boolean get() = true
 
 
@@ -182,16 +184,218 @@ public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment {
  * }
  * ```
  *
+ * - file | - | 语音文件名
+ * - magic | 0 1 | 发送时可选，默认 0，设置为 1 表示变声
+ * - url | - | 语音 URL
+ * - cache | 0 1 | 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
+ * - proxy | 0 1 | 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
+ * - timeout | - | 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
+ *
  */
-public interface OneBotRecordSegment : OneBotMessageSegment {
+public interface OneBotRecordSegment : OneBotMessageSegment, FileAbleSegment, CacheableSegment {
     @JvmDefault
     override val type: String
         get() = "record"
 
-    val file: String
+    override val file: String
+
+    /**
+     * 发送时可选，默认 0，设置为 1 表示变声
+     */
+    val magic: Boolean?
+
+    /**
+     * 语音 URL
+     */
+    val url: String?
+
+
+    /**
+     * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
+     */
+    override val cache: Boolean? get() = true
+
+    /**
+     * 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
+     */
+    val proxy: Boolean? get() = true
+
+
+    /**
+     * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时.
+     */
+    val timeout: Long
+
+}
+
+
+/**
+ * [短视频][https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E7%9F%AD%E8%A7%86%E9%A2%91] 消息段。
+ * ```
+ * {
+ *    "type": "video",
+ *    "data": {
+ *      "file": "http://baidu.com/1.mp4"
+ *    }
+ *  }
+ * ```
+ * 
+ * 
+ * file | - | 视频文件名
+ * url | - | 视频 URL
+ * cache | 0 1 | 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
+ * proxy | 0 1 | 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
+ * timeout | - | 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
+ * 
+ */
+public interface OneBotVideoSegment : OneBotMessageSegment, FileAbleSegment, CacheableSegment {
+    @JvmDefault
+    override val type: String
+        get() = "video"
+
+    override val file: String
+
+    /**
+     * 缓存。
+     */
+    override val cache: Boolean? get() = true
+
+
+    val proxy: Boolean? get() = true
+
+
+    val url: String?
+
+
+    /**
+     * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
+     */
+    val timeout: Long
+
+}
+
+/**
+ * [@某人][https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E6%9F%90%E4%BA%BA] 消息段。
+ *
+ * {
+ *  "type": "at",
+ *      "data": {
+ *          "qq": "10001000"
+ *      }
+ *  }
+ *
+ */
+public interface OneBotAtSegment : OneBotMessageSegment {
+    @JvmDefault
+    override val type: String
+        get() = "at"
+
+    /**
+     * \@的 QQ号，`all` 表示全体成员。
+     */
+    val code: String
+
+}
+
+
+/**
+ * [猜拳魔法表情][https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E7%8C%9C%E6%8B%B3%E9%AD%94%E6%B3%95%E8%A1%A8%E6%83%85]
+ * ```
+ * {
+ *  "type": "rps",
+ *     "data": {}
+ *  }
+ *
+ * ```
+ *
+ *
+ */
+public interface OneBotRpsSegment : OneBotMessageSegment {
+    @JvmDefault
+    override val type: String
+        get() = "rps"
+}
+
+
+/**
+ * [骰子表情][https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#%E6%8E%B7%E9%AA%B0%E5%AD%90%E9%AD%94%E6%B3%95%E8%A1%A8%E6%83%85]
+ *
+ * ```
+ * {
+ *     "type": "dice",
+ *     "data": {}
+ * }
+ * ```
+ *
+ */
+public interface OneBotDiceSegment : OneBotMessageSegment {
+    @JvmDefault
+    override val type: String
+        get() = "dice"
+}
+
+
+/**
+ * [窗口抖动][https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#%E7%AA%97%E5%8F%A3%E6%8A%96%E5%8A%A8%E6%88%B3%E4%B8%80%E6%88%B3-]
+ * ```
+ * {
+ *     "type": "shake",
+ *     "data": {}
+ * }
+ * ```
+ *
+ */
+public interface OneBotShakeSegment : OneBotMessageSegment {
+    @JvmDefault
+    override val type: String
+        get() = "shake"
+
+}
+
+
+/**
+ * [戳一戳][https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#%E6%88%B3%E4%B8%80%E6%88%B3]
+ *  ```
+ *  {
+ *      "type": "poke",
+ *      "data": {
+ *          "type": "126",
+ *          "id": "2003"
+ *      }
+ *  }
+ *  ```
+ *
+ */
+public interface OneBotPokeSegment : OneBotMessageSegment {
+    @JvmDefault
+    override val type: String
+        get() = "poke"
+
+
+    /**
+     * 戳一戳类型，是`data.type`的值。
+     *
+     * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
+     */
+    val pokeType: String
+
+    /**
+     * 戳一戳id。
+     *
+     * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
+     *
+     */
+    val id: String
+
+
 
 
 }
+
+
+
+
+
 
 
 
