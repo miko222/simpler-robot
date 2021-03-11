@@ -32,11 +32,27 @@ package love.forte.simbot.component.onbot.core.message
  * 下面所有可能的值为 0 和 1 的参数，也可以使用 no 和 yes、false 和 true。
  *
  */
-public interface CacheableSegment {
+public interface NetworkAbleSegment {
+
     /**
-     * 缓存值。
+     * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
      */
-    val cache: Boolean?
+    val cache: Boolean? get() = true
+
+    /**
+     * 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
+     */
+    val proxy: Boolean? get() = true
+
+    /**
+     * 网络路径。
+     */
+    val url: String?
+
+    /**
+     * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间，默认不超时。
+     */
+    val timeout: Long
 }
 
 
@@ -67,16 +83,25 @@ public val FileAbleSegment.fileType: FileType get() = FileType.byValue(file)
     }
 ```
  */
-public interface OneBotTextSegment : OneBotMessageSegment {
+public interface OneBotTextSegment : OneBotMessageSegment<OneBotTextSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "text"
 
     /**
-     * 纯文本内容。
+     * 消息段数据
      */
-    val text: String
+    interface Data : SegmentData {
+        /**
+         * 纯文本内容。
+         */
+        val text: String
+    }
 }
+
+
+
+
 
 
 /**
@@ -90,15 +115,18 @@ public interface OneBotTextSegment : OneBotMessageSegment {
     }
  * ```
  */
-public interface OneBotFaceSegment : OneBotMessageSegment {
+public interface OneBotFaceSegment : OneBotMessageSegment<OneBotFaceSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "face"
 
-    /**
-     * 表情ID。
-     */
-    val id: String
+
+    interface Data : SegmentData {
+        /**
+         * 表情ID。
+         */
+        val id: String
+    }
 }
 
 
@@ -127,48 +155,56 @@ public interface OneBotFaceSegment : OneBotMessageSegment {
  *
  *
  */
-public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment, FileAbleSegment {
+public interface OneBotImageSegment : OneBotMessageSegment<OneBotImageSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "image"
 
-    /**
-     * 图片文件名, 一般代表图片的唯一标识，或者文件名、文件路径等。
-     * 发送时，支持
-     * - `file://`
-     * - `http://`
-     * - `base64://`
-     */
-    override val file: String
+
+    interface Data : SegmentData, NetworkAbleSegment, FileAbleSegment {
+        /**
+         * 图片文件名, 一般代表图片的唯一标识，或者文件名、文件路径等。
+         * 发送时，支持
+         * - `file://`
+         * - `http://`
+         * - `base64://`
+         */
+        override val file: String
+
+        /**
+         * 网络路径
+         */
+        override val url: String?
 
 
-    /**
-     * `data.type`。flash 表示闪照，无此参数表示普通图片
-     */
-    val imageType: String?
+        /**
+         * `data.type`。flash 表示闪照，无此参数表示普通图片
+         */
+        val imageType: String?
 
-    /**
-     * 是否为闪照。
-     */
-    @JvmDefault
-    val flash: Boolean get() = imageType == "flash"
+        /**
+         * 是否为闪照。
+         */
+        @JvmDefault
+        val flash: Boolean get() = "flash" == imageType
 
-    /**
-     * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
-     */
-    override val cache: Boolean get() = true
-
-
-    /**
-     * 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
-     */
-    val proxy: Boolean get() = true
+        /**
+         * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
+         */
+        override val cache: Boolean get() = true
 
 
-    /**
-     * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间，默认不超时。
-      */
-    val timeout: Long
+        /**
+         * 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
+         */
+        override val proxy: Boolean get() = true
+
+
+        /**
+         * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间，默认不超时。
+         */
+        override val timeout: Long
+    }
 
 }
 
@@ -192,39 +228,43 @@ public interface OneBotImageSegment : OneBotMessageSegment, CacheableSegment, Fi
  * - timeout | - | 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
  *
  */
-public interface OneBotRecordSegment : OneBotMessageSegment, FileAbleSegment, CacheableSegment {
+public interface OneBotRecordSegment : OneBotMessageSegment<OneBotRecordSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "record"
 
-    override val file: String
 
-    /**
-     * 发送时可选，默认 0，设置为 1 表示变声
-     */
-    val magic: Boolean?
+    interface Data : SegmentData, FileAbleSegment, NetworkAbleSegment {
 
-    /**
-     * 语音 URL
-     */
-    val url: String?
+        override val file: String
 
+        /**
+         * 发送时可选，默认 0，设置为 1 表示变声
+         */
+        val magic: Boolean?
 
-    /**
-     * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
-     */
-    override val cache: Boolean? get() = true
-
-    /**
-     * 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
-     */
-    val proxy: Boolean? get() = true
+        /**
+         * 语音 URL
+         */
+        override val url: String?
 
 
-    /**
-     * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时.
-     */
-    val timeout: Long
+        /**
+         * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
+         */
+        override val cache: Boolean? get() = true
+
+        /**
+         * 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
+         */
+        override val proxy: Boolean? get() = true
+
+
+        /**
+         * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时.
+         */
+        override val timeout: Long
+    }
 
 }
 
@@ -248,29 +288,32 @@ public interface OneBotRecordSegment : OneBotMessageSegment, FileAbleSegment, Ca
  * timeout | - | 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
  * 
  */
-public interface OneBotVideoSegment : OneBotMessageSegment, FileAbleSegment, CacheableSegment {
+public interface OneBotVideoSegment : OneBotMessageSegment<OneBotVideoSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "video"
 
-    override val file: String
+   interface Data : SegmentData, FileAbleSegment, NetworkAbleSegment {
 
-    /**
-     * 缓存。
-     */
-    override val cache: Boolean? get() = true
+       override val file: String
 
-
-    val proxy: Boolean? get() = true
-
-
-    val url: String?
+       /**
+        * 缓存。
+        */
+       override val cache: Boolean? get() = true
 
 
-    /**
-     * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
-     */
-    val timeout: Long
+       override val proxy: Boolean? get() = true
+
+
+       override val url: String?
+
+
+       /**
+        * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
+        */
+       override val timeout: Long
+   }
 
 }
 
@@ -285,15 +328,18 @@ public interface OneBotVideoSegment : OneBotMessageSegment, FileAbleSegment, Cac
  *  }
  *
  */
-public interface OneBotAtSegment : OneBotMessageSegment {
+public interface OneBotAtSegment : OneBotMessageSegment<OneBotAtSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "at"
 
-    /**
-     * \@的 QQ号，`all` 表示全体成员。
-     */
-    val code: String
+    interface Data : SegmentData {
+
+        /**
+         * \@的 QQ号，`all` 表示全体成员。
+         */
+        val code: String
+    }
 
 }
 
@@ -310,10 +356,17 @@ public interface OneBotAtSegment : OneBotMessageSegment {
  *
  *
  */
-public interface OneBotRpsSegment : OneBotMessageSegment {
+public interface OneBotRpsSegment : OneBotMessageSegment<OneBotRpsSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "rps"
+
+    override val data: Data get() = Data
+
+    interface Data : SegmentData {
+        companion object Empty : Data, SegmentData by SegmentData
+    }
+
 }
 
 
@@ -328,10 +381,16 @@ public interface OneBotRpsSegment : OneBotMessageSegment {
  * ```
  *
  */
-public interface OneBotDiceSegment : OneBotMessageSegment {
+public interface OneBotDiceSegment : OneBotMessageSegment<OneBotDiceSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "dice"
+
+    override val data: Data get() = Data
+
+    interface Data : SegmentData {
+        companion object Empty : Data, SegmentData by SegmentData
+    }
 }
 
 
@@ -345,10 +404,16 @@ public interface OneBotDiceSegment : OneBotMessageSegment {
  * ```
  *
  */
-public interface OneBotShakeSegment : OneBotMessageSegment {
+public interface OneBotShakeSegment : OneBotMessageSegment<OneBotShakeSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "shake"
+
+    override val data: Data get() = Data
+
+    interface Data : SegmentData {
+        companion object Empty : Data, SegmentData by SegmentData
+    }
 
 }
 
@@ -366,42 +431,45 @@ public interface OneBotShakeSegment : OneBotMessageSegment {
  *  ```
  *
  */
-public interface OneBotPokeSegment : OneBotMessageSegment {
+public interface OneBotPokeSegment : OneBotMessageSegment<OneBotPokeSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "poke"
 
 
-    /**
-     * 戳一戳类型，是`data.type`的值。
-     *
-     *
-     * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
-     */
-    val pokeType: String
+    interface Data : SegmentData {
+        /**
+         * 戳一戳类型，是`data.type`的值。
+         *
+         *
+         * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
+         */
+        val type: String
 
-    /**
-     * 戳一戳id。
-     *
-     *
-     * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
-     *
-     */
-    val id: String
-
-
-    /**
-     * 表情名。
-     *
-     *
-     * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
-     *
-     */
-    val name: String
+        /**
+         * 戳一戳id。
+         *
+         *
+         * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
+         *
+         */
+        val id: String
 
 
+        /**
+         * 表情名。
+         *
+         *
+         * 参考 [Mirai PokeMessage类][https://github.com/mamoe/mirai/blob/f5eefae7ecee84d18a66afce3f89b89fe1584b78/mirai-core/src/commonMain/kotlin/net.mamoe.mirai/message/data/HummerMessage.kt#L49]
+         *
+         */
+        val name: String
+
+    }
 
 }
+
+
 
 
 
