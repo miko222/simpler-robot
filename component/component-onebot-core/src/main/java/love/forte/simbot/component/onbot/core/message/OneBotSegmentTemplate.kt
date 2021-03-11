@@ -470,6 +470,84 @@ public interface OneBotPokeSegment : OneBotMessageSegment<OneBotPokeSegment.Data
 }
 
 
+/**
+ * [匿名消息][https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E5%8C%BF%E5%90%8D%E5%8F%91%E6%B6%88%E6%81%AF-]
+ *
+ * ```
+ * {
+ *     "type": "anonymous",
+ *     "data": {}
+ * }
+ * ```
+ *
+ */
+public interface OneBotAnonymousSegment : OneBotMessageSegment<OneBotAnonymousSegment.Data> {
+    override val type: String
+        get() = "anonymous"
+
+    override val data: Data
+        get() = Data
+
+    interface Data : SegmentData {
+        companion object Empty : Data, SegmentData by SegmentData
+    }
+
+}
+
+
+/**
+ *
+ * [链接分享][https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E9%93%BE%E6%8E%A5%E5%88%86%E4%BA%AB]
+ *
+ * ```
+ * {
+ *     "type": "share",
+ *     "data": {
+ *         "url": "http://baidu.com",
+ *         "title": "百度"
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * url	✓	✓	-	URL
+ * title	✓	✓	-	标题
+ * content	✓	✓	-	发送时可选，内容描述
+ * image	✓	✓	-	发送时可选，图片 URL
+ * ```
+ *
+ *
+ */
+public interface OneBotShareSegment : OneBotMessageSegment<OneBotShareSegment.Data> {
+
+    override val type: String
+        get() = "share"
+
+
+    interface Data : SegmentData {
+        /**
+         * 分享链接
+         */
+        val url: String
+
+        /**
+         * 分享的标题
+         */
+        val title: String get() = "[分享]"
+
+        /**
+         * 发送时可选，内容描述。
+         */
+        val content: String?
+
+        /**
+         * 发送时可选，图片 URL
+         */
+        val image: String?
+
+    }
+
+}
 
 
 

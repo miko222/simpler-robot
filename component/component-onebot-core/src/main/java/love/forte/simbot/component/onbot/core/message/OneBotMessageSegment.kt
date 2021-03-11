@@ -38,7 +38,7 @@ public interface OneBotMessageSegment<D: SegmentData> {
     /**
      * 获取对应的属性。
      */
-    val data: D?
+    val data: D
 }
 
 /**
