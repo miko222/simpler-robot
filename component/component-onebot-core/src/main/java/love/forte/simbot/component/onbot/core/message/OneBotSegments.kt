@@ -14,8 +14,11 @@
  *
  */
 
-@file:JvmName("OneBotMessageSegmentTemplates")
+@file:JvmName("OneBotMessageSegments")
 package love.forte.simbot.component.onbot.core.message
+
+import love.forte.simbot.api.message.containers.AccountCodeContainer
+import love.forte.simbot.api.message.containers.GroupCodeContainer
 
 
 /*
@@ -24,10 +27,15 @@ package love.forte.simbot.component.onbot.core.message
 
 
 /**
- * 存在缓存值的消息段，即有可能存在 `data.cache`。
+ * 存在网络相关的消息段，即有可能存在 `data.cache`、`data.url`等。
+ *
+ *
+ *
  * 一般使用 `0 or 1`表示 `否 或 是`.
  * - 0: false
  * - 1: true
+ *
+ *
  *
  * 下面所有可能的值为 0 和 1 的参数，也可以使用 no 和 yes、false 和 true。
  *
@@ -510,6 +518,7 @@ public interface OneBotAnonymousSegment : OneBotMessageSegment<OneBotAnonymousSe
  * ```
  *
  * ```
+ * 参数名	收	发	可能的值	说明
  * url	✓	✓	-	URL
  * title	✓	✓	-	标题
  * content	✓	✓	-	发送时可选，内容描述
@@ -548,6 +557,330 @@ public interface OneBotShareSegment : OneBotMessageSegment<OneBotShareSegment.Da
     }
 
 }
+
+
+/**
+ *
+ * 联系方式推荐
+ *
+ * - [推荐好友](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E6%8E%A8%E8%8D%90%E5%A5%BD%E5%8F%8B) (See [OneBotGroupContactSegment])
+ * - [推荐群](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E6%8E%A8%E8%8D%90%E7%BE%A4) (See [OneBotFriendContactSegment])
+ *
+ *
+ * ### 推荐好友
+ * ```
+ * {
+ *     "type": "contact",
+ *     "data": {
+ *         "type": "qq",
+ *         "id": "10001000"
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * type	✓	✓	qq	推荐好友
+ * id	✓	✓	-	被推荐人的 QQ 号
+ * ```
+ *
+ * ### 推荐群
+ * ```
+ * {
+ *     "type": "contact",
+ *     "data": {
+ *         "type": "group",
+ *         "id": "100100"
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * type	✓	✓	group	推荐群
+ * id	✓	✓	-	被推荐群的群号
+ * ```
+ *
+ */
+public interface OneBotContactSegment<D : OneBotContactSegment.Data> : OneBotMessageSegment<D> {
+
+    override val type: String
+        get() = "contact"
+
+    interface Data : SegmentData {
+        /**
+         * 推荐类型，例如 `qq` 或 `group`
+         */
+        val type: String
+
+        /**
+         * 推荐信息的id，例如账号或者群号
+         */
+        val id: String
+    }
+
+    /**
+     * type默认为 `group`, id代表群号信息, 实现 [GroupCodeContainer]
+     */
+    interface GroupData : Data, GroupCodeContainer {
+        override val type: String
+            get() = "group"
+
+        /**
+         * Group code is [id].
+         */
+        override val groupCode: String
+            get() = id
+    }
+
+    /**
+     * type默认为 `qq`, id代表分享人账号信息, 实现 [AccountCodeContainer]
+     */
+    interface FriendData : Data, AccountCodeContainer {
+        override val type: String
+            get() = "qq"
+
+        /**
+         * Account code is [id].
+         */
+        override val accountCode: String
+            get() = id
+    }
+
+}
+
+/**
+ * 群分享消息。
+ * @see OneBotContactSegment
+ */
+public interface OneBotGroupContactSegment : OneBotContactSegment<OneBotContactSegment.GroupData>
+
+
+/**
+ * 好友分享消息。
+ * @see OneBotContactSegment
+ */
+public interface OneBotFriendContactSegment : OneBotContactSegment<OneBotContactSegment.FriendData>
+
+
+
+/**
+ * [位置](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E4%BD%8D%E7%BD%AE)
+ * ```
+ * {
+ *     "type": "location",
+ *     "data": {
+ *         "lat": "39.8969426",
+ *         "lon": "116.3109099"
+ *     }
+ * }
+ * ```
+ *
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * lat	✓	✓	-	纬度
+ * lon	✓	✓	-	经度
+ * title	✓	✓	-	发送时可选，标题
+ * content	✓	✓	-	发送时可选，内容描述
+ * ```
+ *
+ */
+public interface OneBotLocationSegment : OneBotMessageSegment<OneBotLocationSegment.Data> {
+    override val type: String
+        get() = "location"
+
+
+    interface Data : SegmentData {
+        /** 纬度 */
+        val lat: String
+
+        /** 经度 */
+        val lon: String
+
+        /** 发送时可选，标题 */
+        val title: String?
+
+        /** 发送时可选，内容描述 */
+        val content: String?
+    }
+
+}
+
+/**
+ * [音乐分享](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E9%9F%B3%E4%B9%90%E5%88%86%E4%BA%AB-)
+ * [音乐自定义分享](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E9%9F%B3%E4%B9%90%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%86%E4%BA%AB-)
+ *
+ * ### 音乐分享
+ *
+ * ```
+ * {
+ *     "type": "music",
+ *     "data": {
+ *         "type": "163",
+ *         "id": "28949129"
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * type		✓	qq 163 xm	分别表示使用 QQ 音乐、网易云音乐、虾米音乐
+ * id		✓	-	歌曲 ID
+ * ```
+ *
+ *
+ * ### 音乐自定义分享
+ *
+ * ```
+ * {
+ *     "type": "music",
+ *     "data": {
+ *         "type": "custom",
+ *         "url": "http://baidu.com",
+ *         "audio": "http://baidu.com/1.mp3",
+ *         "title": "音乐标题"
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * type		✓	custom	表示音乐自定义分享
+ * url		✓	-	点击后跳转目标 URL
+ * audio		✓	-	音乐 URL
+ * title		✓	-	标题
+ * content		✓	-	发送时可选，内容描述
+ * image		✓	-	发送时可选，图片 URL
+ * ```
+ *
+ */
+public interface OnebotMusicSegment<D : OnebotMusicSegment.Data> : OneBotMessageSegment<D> {
+
+    override val type: String
+        get() = "music"
+
+    interface Data : SegmentData {
+        /**
+         * 可用 `163`、`qq`等，指明一个具体的音乐类型，并配合 [id] 参数。
+         * 可写固定的 `custom` 表示为**自定义音乐分享**并填写 [id]以外的参数。
+         */
+        val type: String
+
+        /**
+         * [type] 不为 `custom` 的时候填写。
+         */
+        val id: String?
+
+        /**
+         * [type] 为 `custom` 的时候填写，点击后跳转目标 URL
+         */
+        val url: String?
+
+        /**
+         * [type] 为 `custom` 的时候填写，音乐 URL
+         */
+        val audio: String?
+
+        /**
+         * [type] 为 `custom` 的时候填写，标题
+         */
+        val title: String?
+
+        /**
+         * [type] 为 `custom` 的时候填写，发送时可选，内容描述
+         */
+        val content: String?
+
+        /**
+         * [type] 为 `custom` 的时候填写，发送时可选，图片 URL
+         */
+        val image: String?
+    }
+
+    /**
+     * 有目标类型的音乐数据类型。
+     */
+    interface TargetData : Data {
+        /**
+         * 目标类型。
+         */
+        override val type: String
+
+        /**
+         * 有目标类型的时候，需要指定ID
+         */
+        override val id: String
+
+        override val url: String? get() = null
+        override val audio: String? get() = null
+        override val title: String? get() = null
+        override val content: String? get() = null
+        override val image: String? get() = null
+    }
+
+    /**
+     * 自定义类型的音乐数据类型。
+     */
+    interface CustomData : Data {
+        /**
+         * 类型固定为 `custom`
+         */
+        override val type: String
+            get() = "custom"
+
+        /**
+         * 为 `custom` 的时候，id一般是不需要的，默认为 `null`。
+         */
+        override val id: String? get() = null
+    }
+
+}
+
+/**
+ * 有指定目标的音乐分享。
+ */
+public interface OneBotTargetMusicSegment : OnebotMusicSegment<OnebotMusicSegment.TargetData>
+
+/**
+ * 自定义音乐分享。
+ */
+public interface OneBotCustomMusicSegment : OnebotMusicSegment<OnebotMusicSegment.CustomData>
+
+
+/**
+ * [回复](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E5%9B%9E%E5%A4%8D)
+ *
+ * ```
+ * {
+ *     "type": "reply",
+ *     "data": {
+ *         "id": "123456"
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * id	✓	✓	-	回复时引用的消息 ID
+ * ```
+ *
+ */
+public interface OneBotReplySegment : OneBotMessageSegment<OneBotReplySegment.Data> {
+
+    override val type: String
+        get() = "reply"
+
+    interface Data : SegmentData {
+        /**
+         * 回复时引用的消息ID
+         */
+        val id: String
+    }
+}
+
+
+
 
 
 

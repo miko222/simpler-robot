@@ -17,6 +17,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>love.forte.simple-robot</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+
         <!-- kt -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
