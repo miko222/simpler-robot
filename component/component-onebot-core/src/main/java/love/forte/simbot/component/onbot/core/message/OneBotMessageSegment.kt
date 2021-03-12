@@ -83,7 +83,7 @@ private class MapSegmentData(private val delegate: Map<String, String>) : Segmen
 
 
 /**
- * 数组格式的onebot消息格式。
+ * 数组(列表)格式的onebot消息格式。
  *
  *
  * see: [数组格式](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/array.md)
