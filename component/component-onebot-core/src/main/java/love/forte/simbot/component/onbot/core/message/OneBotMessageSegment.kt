@@ -112,11 +112,17 @@ public fun segmentArray(vararg segments: OneBotMessageSegment<*>): OneBotMessage
 
 
 public operator fun OneBotMessageSegmentArray.plus(other: OneBotMessageSegmentArray): OneBotMessageSegmentArray {
-    if (this == EmptyOneBotMessageSegmentArray) {
+    if (this.isEmpty() && other.isEmpty()) {
+        return segmentArray()
+    }
+
+    // if (this == EmptyOneBotMessageSegmentArray) {
+    if (this.isEmpty()) {
         return other
     }
 
-    if (other == EmptyOneBotMessageSegmentArray) {
+    // if (other == EmptyOneBotMessageSegmentArray) {
+    if (other.isEmpty()) {
         return this
     }
 
@@ -136,10 +142,14 @@ public operator fun OneBotMessageSegmentArray.plus(other: OneBotMessageSegmentAr
 }
 
 
-
+/**
+ * 数组格式的消息段实现，委托于一个 [list][delegate].
+ */
 private class OneBotMessageSegmentArrayDelegateList(internal val delegate: List<OneBotMessageSegment<*>>) :
     OneBotMessageSegmentArray, List<OneBotMessageSegment<*>> by delegate
 
-
+/**
+ * 空的数组消息段，委托于空list。
+ */
 private object EmptyOneBotMessageSegmentArray :
     OneBotMessageSegmentArray, List<OneBotMessageSegment<*>> by emptyList()

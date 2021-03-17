@@ -79,6 +79,24 @@ public interface FileAbleSegment {
 public val FileAbleSegment.fileType: FileType get() = FileType.byValue(file)
 
 
+/**
+ * 这是一个映射于 [字符串消息][https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/string.md] 的消息段类型，[OneBotStringSegment.Data.value] 中的值应当就是接受到的字符串消息。
+ */
+public interface OneBotStringSegment : OneBotMessageSegment<OneBotStringSegment.Data> {
+    override val type: String
+        get() = "string"
+
+
+    interface Data : SegmentData {
+        /**
+         * 实际接受到的消息内容。
+         */
+        val value: String
+    }
+
+}
+
+
 
 /**
  * [纯文本消息](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#%E7%BA%AF%E6%96%87%E6%9C%AC)
@@ -878,6 +896,275 @@ public interface OneBotReplySegment : OneBotMessageSegment<OneBotReplySegment.Da
         val id: String
     }
 }
+
+
+/**
+ * [合并转发](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E5%90%88%E5%B9%B6%E8%BD%AC%E5%8F%91-)
+ *
+ * ```
+ * {
+ *     "type": "forward",
+ *     "data": {
+ *         "id": "123456"
+ *     }
+ * }
+ * ```
+ *
+ *
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * id	✓		-	合并转发 ID，需通过 get_forward_msg API 获取具体内容
+ * ```
+ *
+ */
+public interface OneBotForwardSegment : OneBotMessageSegment<OneBotForwardSegment.Data> {
+    override val type: String
+        get() = "forward"
+
+    interface Data : SegmentData {
+        /**
+         * 合并转发 ID，需通过 get_forward_msg API 获取具体内容
+         */
+        val id: String
+    }
+
+}
+
+
+/**
+ *
+ * ## 合并转发节点
+ * [合并转发节点](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E5%90%88%E5%B9%B6%E8%BD%AC%E5%8F%91%E8%8A%82%E7%82%B9-)
+ *
+ * ```
+ * {
+ *     "type": "node",
+ *     "data": {
+ *         "id": "123456"
+ *     }
+ * }
+ * ```
+ *
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * id		✓	-	转发的消息 ID
+ * ```
+ *
+ *
+ * ## 合并转发自定义节点
+ * [合并转发自定义节点](https://github.com/howmanybots/onebot/blob/master/v11/specs/message/segment.md#%E5%90%88%E5%B9%B6%E8%BD%AC%E5%8F%91%E8%87%AA%E5%AE%9A%E4%B9%89%E8%8A%82%E7%82%B9)
+ *
+ * 例1：
+ * ```
+ * {
+ *     "type": "node",
+ *     "data": {
+ *         "user_id": "10001000",
+ *         "nickname": "某人",
+ *         "content": "[CQ:face,id=123]哈喽～"
+ *     }
+ * }
+ * ```
+ *
+ * 例2：
+ * ```
+ * {
+ *     "type": "node",
+ *     "data": {
+ *         "user_id": "10001000",
+ *         "nickname": "某人",
+ *         "content": [
+ *             {"type": "face", "data": {"id": "123"}},
+ *             {"type": "text", "data": {"text": "哈喽～"}}
+ *         ]
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * user_id	✓	✓	-	发送者 QQ 号
+ * nickname	✓	✓	-	发送者昵称
+ * content	✓	✓	-	消息内容，支持发送消息时的 message 数据类型，见 API 的参数
+ * ```
+ *
+ *
+ */
+public interface OneBotForwardNodeSegment : OneBotMessageSegment<OneBotForwardNodeSegment.Data> {
+
+    override val type: String
+        get() = "node"
+
+    /**
+     * 如果 [id] 不为null，则认为是通过指定节点进行转发，即等同于 [NormalData],
+     * 如果 [id] 为null，则认为是[自定义节点转发][CustomData]。
+     * @see NormalData
+     * @see CustomData
+     */
+    interface Data : SegmentData {
+        /**
+         * 转发的消息 ID
+         */
+        val id: String?
+
+        /**
+         * 发送者 QQ 号
+         * 自定义节点才会存在。
+         */
+        val userId: String?
+
+        /**
+         * 发送者昵称
+         * 自定义节点才会存在。
+         */
+        val nickname: String?
+
+        /**
+         *
+         * 消息正文, 是一个 [消息段][OneBotMessageSegment]
+         */
+        val constant: OneBotMessageSegment<*>?
+
+    }
+
+    /**
+     * 普通的转发节点
+     */
+    interface NormalData : Data  {
+        /**
+         * 转发的消息 ID
+         */
+        override val id: String
+
+
+        /**
+         * 发送者 QQ 号
+         * 自定义节点才会存在。
+         */
+        override val userId: String? get() = null
+
+        /**
+         * 发送者昵称
+         * 自定义节点才会存在。
+         */
+        override val nickname: String? get() = null
+
+        /**
+         *
+         * 消息正文, 是一个 [消息段][OneBotMessageSegment]
+         */
+        override val constant: OneBotMessageSegment<*>? get() = null
+    }
+
+    /**
+     * 自定义转发节点数据
+     */
+    interface CustomData : Data {
+        /**
+         * 转发的消息 ID
+         */
+        override val id: String? get() = null
+
+        /**
+         * 发送者 QQ 号
+         * 自定义节点才会存在。
+         */
+        override val userId: String
+
+        /**
+         * 发送者昵称
+         * 自定义节点才会存在。
+         */
+        override val nickname: String
+
+        /**
+         *
+         * 消息正文, 是一个 [消息段][OneBotMessageSegment]
+         */
+        override val constant: OneBotMessageSegment<*>
+    }
+
+}
+
+
+/**
+ *
+ * [XML 消息](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#xml-%E6%B6%88%E6%81%AF)
+ *
+ * ```
+ * {
+ *     "type": "xml",
+ *     "data": {
+ *         "data": "<?xml ..."
+ *     }
+ * }
+ * ```
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * data	✓	✓	-	XML 内容
+ * ```
+ */
+public interface OneBotXmlSegment : OneBotMessageSegment<OneBotXmlSegment.Data> {
+    override val type: String
+        get() = "xml"
+
+    interface Data : SegmentData {
+        /**
+         * xml最终的值。
+         */
+        val data: String
+    }
+}
+
+/**
+ * [JSON消息](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#json-%E6%B6%88%E6%81%AF)
+ *
+ * ```
+ * {
+ *     "type": "json",
+ *     "data": {
+ *         "data": "{\"app\": ..."
+ *     }
+ * }
+ * ```
+ *
+ *
+ * ```
+ * 参数名	收	发	可能的值	说明
+ * data	✓	✓	-	JSON 内容
+ * ```
+ *
+ */
+public interface OneBotJsonSegment : OneBotMessageSegment<OneBotJsonSegment.Data> {
+
+    override val type: String
+        get() = "json"
+
+    interface Data : SegmentData {
+        /**
+         * JSON 内容
+         */
+        val data: String
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
