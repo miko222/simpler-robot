@@ -17,7 +17,9 @@
 package love.forte.simbot.component.onbot.core.event.message
 
 import love.forte.simbot.component.onbot.core.event.OneBotEvent
+import love.forte.simbot.component.onbot.core.event.SubType
 import love.forte.simbot.component.onbot.core.event.SubTypeContainer
+import love.forte.simbot.component.onbot.core.segment.OneBotMessageSegment
 
 
 /**
@@ -27,7 +29,17 @@ import love.forte.simbot.component.onbot.core.event.SubTypeContainer
  * 可参考 [消息事件](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/message.md)
  *
  */
-public interface OneBotMessageEvent : OneBotEvent, SubTypeContainer {
+public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> : OneBotEvent, SubTypeContainer<S> {
+
+    /**
+     * 事件发生的时间戳.
+     */
+    override val time: Long
+
+    /**
+     * 收到事件的机器人 QQ 号
+     */
+    override val selfId: Long
 
     /**
      * 消息类型。
@@ -39,6 +51,18 @@ public interface OneBotMessageEvent : OneBotEvent, SubTypeContainer {
      *
      */
     val messageType: String
+
+
+    /**
+     * 消息ID。
+     */
+    val messageId: String
+
+
+    /**
+     * 消息段内容。
+     */
+    val message: OneBotMessageSegment<*>
 
 
     /**
@@ -61,6 +85,12 @@ public interface OneBotMessageEvent : OneBotEvent, SubTypeContainer {
      *
      *
      */
-    override val subType: String
+    val subType: String
+
+
+    /**
+     * 消息类型下子实现类对应的子类型接口。
+     */
+    interface MessageEventSubType : SubType
 
 }

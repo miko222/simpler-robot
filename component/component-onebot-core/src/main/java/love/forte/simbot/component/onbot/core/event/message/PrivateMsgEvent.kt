@@ -16,9 +16,6 @@
 
 package love.forte.simbot.component.onbot.core.event.message
 
-import love.forte.simbot.api.message.events.PrivateMsg
-import love.forte.simbot.component.onbot.core.event.OneBotEvent
-
 /**
  * [私聊消息事件](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/message.md#%E7%A7%81%E8%81%8A%E6%B6%88%E6%81%AF).
  *
@@ -59,17 +56,7 @@ import love.forte.simbot.component.onbot.core.event.OneBotEvent
  *
  *
  */
-public interface PrivateMsgEvent : OneBotEvent, PrivateMsg {
-
-    /**
-     * 事件发生的时间戳.
-     */
-    override val time: Long
-
-    /**
-     * 收到事件的机器人 QQ 号
-     */
-    override val selfId: Long
+public interface PrivateMsgEvent : OneBotMessageEvent<PrivateMsgEvent.SubType> {
 
     /**
      * 上报类型. 可能的值 `message`.
@@ -78,8 +65,39 @@ public interface PrivateMsgEvent : OneBotEvent, PrivateMsg {
         get() = "message"
 
 
+    /**
+     * 私聊消息，消息类型。可能值：`private`
+     */
+    override val messageType: String
+        get() = "private"
+
+
+    /**
+     * 私聊消息的[子类型约束][SubType]。
+     */
+    override val subTypeConstraint: SubType
 
 
 
+
+    /**
+     * 私聊消息对应子类型约束枚举。
+     *
+     * 私聊类型子类型对应可能的值：
+     * - `friend`
+     * - `group`
+     * - `other`
+     *
+     */
+    enum class SubType(override val type: String) : OneBotMessageEvent.MessageEventSubType {
+        /** 好友私聊 */
+        FRIEND("friend"),
+
+        /** 群临时会话 */
+        GROUP("group"),
+
+        /** 其他可能 */
+        OTHER("other")
+    }
 
 }
