@@ -16,7 +16,7 @@
 
 @file:JvmName("OneBotMessageSegments")
 
-package love.forte.simbot.component.onbot.core.segment
+package love.forte.simbot.component.onebot.core.segment
 
 import love.forte.simbot.api.message.containers.AccountCodeContainer
 import love.forte.simbot.api.message.containers.GroupCodeContainer

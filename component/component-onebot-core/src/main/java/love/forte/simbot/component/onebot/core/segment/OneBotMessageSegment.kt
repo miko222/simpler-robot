@@ -16,7 +16,7 @@
 
 @file:JvmName("OneBotMessages")
 
-package love.forte.simbot.component.onbot.core.segment
+package love.forte.simbot.component.onebot.core.segment
 
 
 /**

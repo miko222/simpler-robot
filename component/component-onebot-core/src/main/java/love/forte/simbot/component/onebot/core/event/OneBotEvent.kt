@@ -13,7 +13,7 @@
  *  *
  *
  */
-package love.forte.simbot.component.onbot.core.event
+package love.forte.simbot.component.onebot.core.event
 
 /**
  * one bot事件父类接口。

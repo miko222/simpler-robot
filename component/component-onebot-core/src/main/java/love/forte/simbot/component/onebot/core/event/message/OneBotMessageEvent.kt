@@ -14,12 +14,12 @@
  *
  */
 
-package love.forte.simbot.component.onbot.core.event.message
+package love.forte.simbot.component.onebot.core.event.message
 
-import love.forte.simbot.component.onbot.core.event.OneBotEvent
-import love.forte.simbot.component.onbot.core.event.SubType
-import love.forte.simbot.component.onbot.core.event.SubTypeContainer
-import love.forte.simbot.component.onbot.core.segment.OneBotMessageSegment
+import love.forte.simbot.component.onebot.core.event.OneBotEvent
+import love.forte.simbot.component.onebot.core.event.SubType
+import love.forte.simbot.component.onebot.core.event.SubTypeContainer
+import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
 
 
 /**
@@ -61,6 +61,13 @@ public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> 
 
     /**
      * 消息段内容。
+     *
+     * 如果类型为 [love.forte.simbot.component.onebot.core.segment.OneBotStringSegment],
+     * 则说明消息类型是一个 **字符串** 消息。
+     *
+     *
+     * 其他的则为各自对应的消息段类型。
+     *
      */
     val message: OneBotMessageSegment<*>
 
@@ -86,6 +93,10 @@ public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> 
      *
      */
     val subType: String
+
+
+
+
 
 
     /**

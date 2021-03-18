@@ -14,7 +14,9 @@
  *
  */
 
-package love.forte.simbot.component.onbot.core.event.message
+package love.forte.simbot.component.onebot.core.event.message
+
+import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
 
 /**
  * [私聊消息事件](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/message.md#%E7%A7%81%E8%81%8A%E6%B6%88%E6%81%AF).
@@ -77,6 +79,59 @@ public interface PrivateMsgEvent : OneBotMessageEvent<PrivateMsgEvent.SubType> {
      */
     override val subTypeConstraint: SubType
 
+
+    /**
+     * 消息ID
+     */
+    override val messageId: String
+
+
+    /**
+     * 消息正文
+     */
+    override val message: OneBotMessageSegment<*>
+
+
+    /**
+     * 用户(发送者)对应账号
+     */
+    val userId: Long
+
+
+    /**
+     * 事件消息的原始消息段。
+     */
+    val rawMessage: String
+
+
+    /**
+     * 字体对应ID
+     */
+    val font: Int
+
+
+    /**
+     * 发送人信息.
+     */
+    val sender: Sender
+
+
+    /**
+     * 发送人信息.
+     */
+    interface Sender {
+        /** 发送者 QQ 号 */
+        val userId: Long
+
+        /** 昵称 */
+        val nickname: String
+
+        /** 性别, male 或 female 或 unknown */
+        val sex: String
+
+        /** 年龄 */
+        val age: Int
+    }
 
 
 
