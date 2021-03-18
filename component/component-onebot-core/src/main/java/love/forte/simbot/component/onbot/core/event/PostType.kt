@@ -29,6 +29,7 @@ import java.util.*
  *  * request：请求事件
  *  * meta_event：元事件
  *
+ * 可参考 [事件概述](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/README.md)
  *
  * @author ForteScarlet
  */

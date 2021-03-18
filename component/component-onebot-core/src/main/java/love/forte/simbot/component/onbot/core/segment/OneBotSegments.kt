@@ -81,14 +81,42 @@ public val FileAbleSegment.fileType: FileType get() = FileType.byValue(file)
 
 
 /**
- * 这是一个映射于 [字符串消息][https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/string.md] 的消息段类型，[OneBotStringSegment.Data.value] 中的值应当就是接受到的字符串消息。
+ * 这是一个映射于 [字符串消息][https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/string.md] 的消息段类型，
+ * [OneBotStringSegment.Data.value] 中的值应当就是接受到的字符串消息。
+ *
+ * 映射结果：
+ * ```
+ * {
+ *   "type": "type",
+ *   "data": {
+ *     "value": "xxxxx"
+ *   }
+ * }
+ * ```
+ *
+ * 实际：
+ * ```
+ * {
+ *   "type": "type",
+ *   "data": "xxxxxx"
+ * }
+ * ```
+ *
+ *
  */
 public interface OneBotStringSegment : OneBotMessageSegment<OneBotStringSegment.Data> {
     override val type: String
-        get() = "string"
 
+    /**
+     * 数据内容
+     */
+    override val data: Data
 
-    interface Data : SegmentData {
+    /**
+     * 数据内容.
+     * @see BaseStringSegmentData
+     */
+    interface Data : SegmentData, CharSequence {
         /**
          * 实际接受到的消息内容。
          */
@@ -97,17 +125,27 @@ public interface OneBotStringSegment : OneBotMessageSegment<OneBotStringSegment.
 
 }
 
+/**
+ * [OneBotStringSegment.Data] 的基础抽象类。
+ */
+public abstract class BaseStringSegmentData(override val value: String) : OneBotStringSegment.Data, CharSequence by value {
+    override fun toString(): String = value
+}
+
+
+
+
 
 /**
  * [纯文本消息](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#%E7%BA%AF%E6%96%87%E6%9C%AC)
-```
-{
-"type": "text",
-"data": {
-"text": "纯文本内容"
-}
-}
-```
+ * ```
+ * {
+ *   "type": "text",
+ *   "data": {
+ *     "text": "纯文本内容"
+ *   }
+ * }
+ * ```
  */
 public interface OneBotTextSegment : OneBotMessageSegment<OneBotTextSegment.Data> {
     @JvmDefault

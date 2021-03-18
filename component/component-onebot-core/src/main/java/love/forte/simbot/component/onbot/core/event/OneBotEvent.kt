@@ -71,22 +71,15 @@ interface OneBotEvent {
 
 
     /**
-     * 以防万一，提供获取字符串类型的 [selfId] 接口，并在需要的时候进行重写。
-     */
-    @JvmDefault
-    val selfIdValue: String get() = selfId.toString()
-
-
-    /**
-     * 事件类型。
+     * 事件类型。可能的值为 [PostType] 中的元素值。可参考 [onebot事件概述](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/README.md)
      */
     val postType: String
 
-
-    /**
-     * 通过 [postType] 获取一个对应的枚举类型。
-     */
-    @JvmDefault
-    val postTypeValue: PostType get() = PostType.byType(postType)
-
 }
+
+
+
+/**
+ * 通过 [OneBotEvent.postType] 获取一个对应的枚举类型。
+ */
+public val OneBotEvent.postTypeValue: PostType get() = PostType.byType(postType)
