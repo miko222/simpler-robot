@@ -15,7 +15,8 @@
  */
 
 @file:JvmName("OneBotMessageSegments")
-package love.forte.simbot.component.onbot.core.message
+
+package love.forte.simbot.component.onbot.core.segment
 
 import love.forte.simbot.api.message.containers.AccountCodeContainer
 import love.forte.simbot.api.message.containers.GroupCodeContainer
@@ -97,16 +98,15 @@ public interface OneBotStringSegment : OneBotMessageSegment<OneBotStringSegment.
 }
 
 
-
 /**
  * [纯文本消息](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#%E7%BA%AF%E6%96%87%E6%9C%AC)
-    ```
-    {
-        "type": "text",
-        "data": {
-        "text": "纯文本内容"
-        }
-    }
+```
+{
+"type": "text",
+"data": {
+"text": "纯文本内容"
+}
+}
 ```
  */
 public interface OneBotTextSegment : OneBotMessageSegment<OneBotTextSegment.Data> {
@@ -126,19 +126,15 @@ public interface OneBotTextSegment : OneBotMessageSegment<OneBotTextSegment.Data
 }
 
 
-
-
-
-
 /**
  * [表情消息](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/message/segment.md#qq-%E8%A1%A8%E6%83%85)
  * ```
-    {
-    "type": "face",
-        "data": {
-        "id": "123"
-        }
-    }
+{
+"type": "face",
+"data": {
+"id": "123"
+}
+}
  * ```
  */
 public interface OneBotFaceSegment : OneBotMessageSegment<OneBotFaceSegment.Data> {
@@ -212,7 +208,8 @@ public interface OneBotImageSegment : OneBotMessageSegment<OneBotImageSegment.Da
          * 是否为闪照。
          */
         @JvmDefault
-        val flash: Boolean get() = "flash" == imageType
+        val flash: Boolean
+            get() = "flash" == imageType
 
         /**
          * 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
@@ -305,41 +302,41 @@ public interface OneBotRecordSegment : OneBotMessageSegment<OneBotRecordSegment.
  *    }
  *  }
  * ```
- * 
- * 
+ *
+ *
  * file | - | 视频文件名
  * url | - | 视频 URL
  * cache | 0 1 | 只在通过网络 URL 发送时有效，表示是否使用已缓存的文件，默认 1
  * proxy | 0 1 | 只在通过网络 URL 发送时有效，表示是否通过代理下载文件（需通过环境变量或配置文件配置代理），默认 1
  * timeout | - | 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
- * 
+ *
  */
 public interface OneBotVideoSegment : OneBotMessageSegment<OneBotVideoSegment.Data> {
     @JvmDefault
     override val type: String
         get() = "video"
 
-   interface Data : SegmentData, FileAbleSegment, NetworkAbleSegment {
+    interface Data : SegmentData, FileAbleSegment, NetworkAbleSegment {
 
-       override val file: String
+        override val file: String
 
-       /**
-        * 缓存。
-        */
-       override val cache: Boolean? get() = true
-
-
-       override val proxy: Boolean? get() = true
+        /**
+         * 缓存。
+         */
+        override val cache: Boolean? get() = true
 
 
-       override val url: String?
+        override val proxy: Boolean? get() = true
 
 
-       /**
-        * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
-        */
-       override val timeout: Long
-   }
+        override val url: String?
+
+
+        /**
+         * 只在通过网络 URL 发送时有效，单位秒，表示下载网络文件的超时时间 ，默认不超时
+         */
+        override val timeout: Long
+    }
 
 }
 
@@ -679,7 +676,6 @@ public interface OneBotGroupContactSegment : OneBotContactSegment<OneBotContactS
  * @see OneBotContactSegment
  */
 public interface OneBotFriendContactSegment : OneBotContactSegment<OneBotContactSegment.FriendData>
-
 
 
 /**
@@ -1032,7 +1028,7 @@ public interface OneBotForwardNodeSegment : OneBotMessageSegment<OneBotForwardNo
     /**
      * 普通的转发节点
      */
-    interface NormalData : Data  {
+    interface NormalData : Data {
         /**
          * 转发的消息 ID
          */
@@ -1151,23 +1147,6 @@ public interface OneBotJsonSegment : OneBotMessageSegment<OneBotJsonSegment.Data
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

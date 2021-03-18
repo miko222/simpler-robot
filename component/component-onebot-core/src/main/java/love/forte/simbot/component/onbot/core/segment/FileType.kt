@@ -14,7 +14,7 @@
  *
  */
 
-package love.forte.simbot.component.onbot.core.message
+package love.forte.simbot.component.onbot.core.segment
 
 
 /**
