@@ -21,7 +21,8 @@ import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
 /**
  * [私聊消息事件](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/message.md#%E7%A7%81%E8%81%8A%E6%B6%88%E6%81%AF).
  *
- * ab
+ *
+ * 相关参数:
  *
  * ```
  * 事件数据
@@ -45,6 +46,7 @@ import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
  * nickname	string	昵称
  * sex	string	性别，male 或 female 或 unknown
  * age	number (int32)	年龄
+ *
  * 需要注意的是，sender 中的各字段是尽最大努力提供的，也就是说，不保证每个字段都一定存在，也不保证存在的字段都是完全正确的（缓存可能过期）。
  *
  * 快速操作
@@ -55,17 +57,8 @@ import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
  * ```
  *
  *
- *
- *
  */
-public interface PrivateMsgEvent : OneBotMessageEvent<PrivateMsgEvent.SubType> {
-
-    /**
-     * 上报类型. 可能的值 `message`.
-     */
-    override val postType: String
-        get() = "message"
-
+public interface OneBotPrivateMsg : OneBotMessage<OneBotPrivateMsg.SubType> {
 
     /**
      * 私聊消息，消息类型。可能值：`private`
@@ -95,13 +88,13 @@ public interface PrivateMsgEvent : OneBotMessageEvent<PrivateMsgEvent.SubType> {
     /**
      * 用户(发送者)对应账号
      */
-    val userId: Long
+    override val userId: Long
 
 
     /**
      * 事件消息的原始消息段。
      */
-    val rawMessage: String
+    override val rawMessage: String
 
 
     /**
@@ -113,24 +106,25 @@ public interface PrivateMsgEvent : OneBotMessageEvent<PrivateMsgEvent.SubType> {
     /**
      * 发送人信息.
      */
-    val sender: Sender
+    override val sender: Sender
 
 
     /**
      * 发送人信息.
      */
-    interface Sender {
+    interface Sender : OneBotMessage.Sender {
+
         /** 发送者 QQ 号 */
-        val userId: Long
+        override val userId: Long?
 
         /** 昵称 */
-        val nickname: String
+        override val nickname: String?
 
         /** 性别, male 或 female 或 unknown */
-        val sex: String
+        override val sex: String?
 
         /** 年龄 */
-        val age: Int
+        override val age: Int?
     }
 
 
@@ -144,7 +138,7 @@ public interface PrivateMsgEvent : OneBotMessageEvent<PrivateMsgEvent.SubType> {
      * - `other`
      *
      */
-    enum class SubType(override val type: String) : OneBotMessageEvent.MessageEventSubType {
+    enum class SubType(override val type: String) : OneBotMessage.MessageEventSubType {
         /** 好友私聊 */
         FRIEND("friend"),
 

@@ -29,7 +29,7 @@ import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
  * 可参考 [消息事件](https://github.com/howmanybots/onebot/blob/master/v12-draft/specs/event/message.md)
  *
  */
-public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> : OneBotEvent, SubTypeContainer<S> {
+public interface OneBotMessage<S : OneBotMessage.MessageEventSubType> : OneBotEvent, SubTypeContainer<S> {
 
     /**
      * 事件发生的时间戳.
@@ -40,6 +40,10 @@ public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> 
      * 收到事件的机器人 QQ 号
      */
     override val selfId: Long
+
+
+    override val postType: String
+        get() = "message"
 
     /**
      * 消息类型。
@@ -73,6 +77,12 @@ public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> 
 
 
     /**
+     * 原始消息内容。
+     */
+    val rawMessage: String
+
+
+    /**
      *
      * 消息事件子类型。
      *
@@ -95,13 +105,46 @@ public interface OneBotMessageEvent<S : OneBotMessageEvent.MessageEventSubType> 
     val subType: String
 
 
+    /**
+     * 用户(发送者)对应账号
+     */
+    val userId: Long
 
 
+    /**
+     * 发送人信息.
+     */
+    val sender: Sender
 
 
     /**
      * 消息类型下子实现类对应的子类型接口。
      */
     interface MessageEventSubType : SubType
+
+
+    /**
+     * 消息发送者的信息。
+     */
+    interface Sender {
+
+        /** 发送者 QQ 号 */
+        val userId: Long?
+
+        /** 昵称 */
+        val nickname: String?
+
+        /**
+         * 性别, male 或 female 或 unknown
+         * 获取不到则得到null。
+         */
+        val sex: String?
+
+        /**
+         * 年龄.
+         */
+        val age: Int?
+
+    }
 
 }
