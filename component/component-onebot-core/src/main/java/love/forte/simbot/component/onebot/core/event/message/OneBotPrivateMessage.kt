@@ -58,7 +58,7 @@ import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
  *
  *
  */
-public interface OneBotPrivateMsg : OneBotMessage<OneBotPrivateMsg.SubType> {
+public interface OneBotPrivateMessage : OneBotMessage<OneBotPrivateMessage.SubType> {
 
     /**
      * 私聊消息，消息类型。可能值：`private`

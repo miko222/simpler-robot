@@ -71,7 +71,7 @@ import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
  *
  *
  */
-interface OneBotGroupMsg : OneBotMessage<OneBotGroupMsg.SubType> {
+interface OneBotGroupMessage : OneBotMessage<OneBotGroupMessage.SubType> {
 
     /**
      * 事件发生的时间戳
