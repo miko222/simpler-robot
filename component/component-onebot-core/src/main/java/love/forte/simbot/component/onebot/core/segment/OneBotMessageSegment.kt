@@ -19,6 +19,18 @@
 package love.forte.simbot.component.onebot.core.segment
 
 
+
+
+// /**  */
+// public fun OneBotMessageSegment<*>.isEmpty(): Boolean = TODO()
+
+/** 是否为数组类型 */
+public fun OneBotMessageSegment<*>.isArray(): Boolean = TODO()
+
+/**  */
+public fun OneBotMessageSegment<*>.isString(): Boolean = TODO()
+
+
 /**
  * onebot [消息][https://github.com/howmanybots/onebot/tree/master/v12-draft/specs/message] 类型接口。
  *

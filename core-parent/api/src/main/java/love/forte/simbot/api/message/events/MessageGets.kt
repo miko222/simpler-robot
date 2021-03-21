@@ -138,7 +138,10 @@ public interface GroupMsg : MessageGet, GroupContainer, GroupAccountContainer, P
         ANON,
 
         /** 系统消息 */
-        SYS
+        SYS,
+
+        /** 其他类型 */
+        OTHER
     }
 
 

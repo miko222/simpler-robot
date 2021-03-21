@@ -20,10 +20,13 @@ package love.forte.simbot.component.onebot.core.cross
 import love.forte.simbot.api.message.containers.AccountInfo
 import love.forte.simbot.api.message.containers.BotInfo
 import love.forte.simbot.api.message.containers.GroupAccountInfo
+import love.forte.simbot.api.message.events.GroupMsg
+import love.forte.simbot.api.message.events.PrivateMsg
 import love.forte.simbot.component.onebot.core.OneBotRuntimeException
 import love.forte.simbot.component.onebot.core.event.OneBotEvent
 import love.forte.simbot.component.onebot.core.event.message.OneBotGroupMessage
 import love.forte.simbot.component.onebot.core.event.message.OneBotMessage
+import love.forte.simbot.component.onebot.core.event.message.OneBotPrivateMessage
 import love.forte.simbot.component.onebot.core.qicq.userAvatar
 
 
@@ -127,6 +130,25 @@ private data class BotInfoData(
     override val botCode: String,
     override val botName: String
 ) : BotInfo
+
+
+
+public val OneBotPrivateMessage.SubType.simbotType: PrivateMsg.Type
+    get() = when(this) {
+        OneBotPrivateMessage.SubType.FRIEND -> PrivateMsg.Type.FRIEND
+        OneBotPrivateMessage.SubType.GROUP -> PrivateMsg.Type.GROUP_TEMP
+        OneBotPrivateMessage.SubType.OTHER -> PrivateMsg.Type.OTHER
+    }
+
+
+public val OneBotGroupMessage.SubType.simbotType: GroupMsg.Type
+    get() = when(this) {
+        OneBotGroupMessage.SubType.NORMAL -> GroupMsg.Type.NORMAL
+        OneBotGroupMessage.SubType.ANONYMOUS -> GroupMsg.Type.ANON
+        OneBotGroupMessage.SubType.NOTICE -> GroupMsg.Type.SYS
+    }
+
+
 
 
 

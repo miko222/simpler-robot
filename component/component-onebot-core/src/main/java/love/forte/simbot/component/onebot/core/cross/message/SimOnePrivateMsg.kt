@@ -18,11 +18,15 @@ package love.forte.simbot.component.onebot.core.cross.message
 
 import love.forte.simbot.api.message.MessageContent
 import love.forte.simbot.api.message.assists.Flag
+import love.forte.simbot.api.message.assists.flag
 import love.forte.simbot.api.message.containers.AccountInfo
 import love.forte.simbot.api.message.containers.BotInfo
 import love.forte.simbot.api.message.events.PrivateMsg
+import love.forte.simbot.api.message.events.PrivateMsgIdFlagContent
 import love.forte.simbot.component.onebot.core.cross.asAccountInfo
+import love.forte.simbot.component.onebot.core.cross.simbotType
 import love.forte.simbot.component.onebot.core.event.message.OneBotPrivateMessage
+import love.forte.simbot.component.onebot.core.segment.OneBotMessageSegment
 
 
 /**
@@ -32,22 +36,14 @@ import love.forte.simbot.component.onebot.core.event.message.OneBotPrivateMessag
 public interface SimOnePrivateMsg : OneBotPrivateMessage, PrivateMsg {
 
     /**
-     * 账号的信息。
-     */
-    override val accountInfo: AccountInfo
-        get() = sender.asAccountInfo()
-
-    /**
      * bot信息
      */
     override val botInfo: BotInfo
-        get() = TODO("Not yet implemented")
 
     /**
      * 得到原始数据字符串。
      */
     override val originalData: String
-        get() = TODO("Not yet implemented")
 
     /**
      *  消息事件的消息正文文本。
@@ -57,11 +53,9 @@ public interface SimOnePrivateMsg : OneBotPrivateMessage, PrivateMsg {
 
     /** 当前监听事件消息的ID。一般情况下应当是一个唯一ID。 */
     override val id: String
-        get() = TODO("Not yet implemented")
 
     /** 消息接收到的时间。一般是一个毫秒时间戳。 */
     override val time: Long
-        get() = TODO("Not yet implemented")
 
 
     /**
@@ -73,21 +67,49 @@ public interface SimOnePrivateMsg : OneBotPrivateMessage, PrivateMsg {
      *
      */
     override val flag: Flag<PrivateMsg.FlagContent>
-        get() = TODO("Not yet implemented")
+    // get() = flag { PrivateMsgIdFlagContent(messageId) }
 
     /**
      * 获取私聊消息类型
      */
     override val privateMsgType: PrivateMsg.Type
-        get() = TODO("Not yet implemented")
+        get() = subTypeConstraint.simbotType
+
 }
 
 
-// /**
-//  * [SimOBPrivateMsg] 接口实现。
-//  */
-// public class SimOBPrivateMsgImpl : SimOBPrivateMsg {
-//
-//
-//
-// }
+/**
+ * [SimOBPrivateMsg] 接口实现。
+ */
+public data class SimOnePrivateMsgImpl(
+    override val time: Long,
+    override val id: String,
+    override val selfId: Long,
+    override val subType: String,
+    override val subTypeConstraint: OneBotPrivateMessage.SubType,
+    override val messageId: String,
+    override val message: OneBotMessageSegment<*>,
+    override val userId: Long,
+    override val rawMessage: String,
+    override val font: Int,
+    override val sender: OneBotPrivateMessage.Sender,
+) :
+    BaseSimOneMessage<OneBotPrivateMessage.SubType>(),
+    SimOnePrivateMsg {
+
+    /**
+     * 消息正文。
+     */
+    override val msgContent: MessageContent
+        get() = TODO("Not yet implemented")
+
+    /**
+     * 账号的信息。
+     */
+    override val accountInfo: AccountInfo = sender.asAccountInfo()
+
+    /**
+     * 私聊消息标识, 以 [messageId] 作为标识。
+     */
+    override val flag: Flag<PrivateMsg.FlagContent> = flag { PrivateMsgIdFlagContent(messageId) }
+}

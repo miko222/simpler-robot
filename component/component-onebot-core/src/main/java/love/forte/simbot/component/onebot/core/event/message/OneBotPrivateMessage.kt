@@ -128,7 +128,6 @@ public interface OneBotPrivateMessage : OneBotMessage<OneBotPrivateMessage.SubTy
     }
 
 
-
     /**
      * 私聊消息对应子类型约束枚举。
      *
