@@ -18,6 +18,7 @@ WORKS.add({
     name: 'simple-robot:api模块',
     logo: 'logo/logo-4@0,75x.png',
     description: 'simple-robot的API模块，为simbot框架提供标准接口规范。',
+    detailPage: null,
     belonging: WORK_BELONGING.OFFICIAL.value,
     type: [WORK_TYPE.FRAME.value, WORK_TYPE.API.value],
     home: {
@@ -34,6 +35,7 @@ WORKS.add({
     name: 'simple-robot:core模块',
     logo: 'logo/logo-4@0,75x.png',
     description: 'simple-robot的核心模块，是所有组件的基础模块。继承simple-robot:api模块并实现其大部分标准接口。',
+    detailPage: null,
     belonging: WORK_BELONGING.OFFICIAL.value,
     type: [WORK_TYPE.FRAME.value, WORK_TYPE.CORE.value],
     home: {

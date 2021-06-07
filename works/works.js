@@ -9,6 +9,7 @@ const WORKS = {
     works: [],
 
     /**
+     * 追加一个作品信息。
      *
      * @param work {{
      *      id: String,
@@ -28,14 +29,62 @@ const WORKS = {
      * }}
      */
     add(work) {
-        this.works.push(work)
+        console.log(work)
+        checkWork(work)
+        this.works.push(deepFreeze(JSON.parse(JSON.stringify(work))))
     }
 }
 
 function checkWork(work) {
-    if (work)
+    const id = work.id
+    if (!id) {
+        throw rm('id')
+    }
 
-    throw "No!"
+    const name = work.name
+    if (!name) {
+        throw rm('name', id)
+    }
+
+    const showId = id + ':' + name
+
+    // logo?
+    if (!work.logo) {
+        throw rm('logo', showId)
+    }
+
+    if (!work.description) {
+        throw rm('description', showId)
+    }
+
+    if (work.belonging == null) {
+        throw rm('belonging', showId)
+    }
+
+    if (!Array.isArray(work.type)) {
+        throw showId + " 'type' is not Array"
+    }
+
+    if (!work.type) {
+        throw rem('type', showId)
+    }
+}
+
+// required message
+function rm(name, id) {
+    if (id) {
+        return id + " Required '"+ name +"' is null"
+    } else {
+        return " Required '"+ name +"' is null"
+    }
+}
+// required empty message
+function rem(name, id) {
+    if (id) {
+        return id + " Required '"+ name +"' is empty"
+    } else {
+        return " Required '"+ name +"' is empty"
+    }
 }
 
 

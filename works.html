@@ -55,7 +55,8 @@
                         <small>看不到的东西：bot.old</small> <br>
                     </h3>
                 </div>
-                <p><a href="https://github.com/ForteScarlet/simpler-robot" class="btn btn-primary" role="button">信息</a></p>
+                <p><a href="https://github.com/ForteScarlet/simpler-robot" class="btn btn-primary" role="button">信息</a>
+                </p>
             </div>
         </div>
     </div>
@@ -77,7 +78,8 @@
                         <small>看不到的东西：bot.old</small> <br>
                     </h3>
                 </div>
-                <p><a href="https://github.com/ForteScarlet/simpler-robot" class="btn btn-primary" role="button">信息</a></p>
+                <p><a href="https://github.com/ForteScarlet/simpler-robot" class="btn btn-primary" role="button">信息</a>
+                </p>
             </div>
         </div>
     </div>
@@ -87,7 +89,8 @@
         <div class="thumbnail">
             <!-- logo区 -->
             <div class="logo-div" style="background: #cae8f7">
-                <img :src="'works/' + w.id + '/' + w.logo" :alt="w.name + '-LOGO'" class="img-circle head-img">
+                <img :src="w.logo.startsWith('http') ? w.logo : 'works/' + w.id + '/' + w.logo" :alt="w.name + '-LOGO'"
+                     class="img-circle head-img">
             </div>
             <!-- 信息区 -->
             <div class="caption">
@@ -104,7 +107,12 @@
                         <small v-text="'8.'"></small> <br>
                     </h3>
                 </div>
-                <p><a v-if="w.home && w.home.url" :href="w.home.url" :alt="w.home.name" class="btn btn-primary" role="button">官网</a></p>
+                <p>
+                    <a v-if="w.home && w.home.url" :href="w.home.url" :alt="w.home.name"
+                       class="btn btn-primary" role="button">
+                        官网
+                    </a>
+                </p>
             </div>
         </div>
     </div>
@@ -118,7 +126,8 @@
         el: '#simbot-work-app',
         data: {
             works: WORKS.works
-        }
+        },
+
     })
 
 
