@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="simple-robot,simbot,forte,forteScarlet">
+    <meta name="description" content="Simple robot exhibition"/>
+    <!-- my icon -->
+    <link rel="icon" href="https://q1.qlogo.cn/g?b=qq&nk=1149159218&s=100" type="image/x-icon"/>
+    <!-- bootstrap~ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        .head-img {
+            width: 140px;
+            height: 140px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .thumbnail-div {
+            background: #cae8f7;
+            text-align: center;
+        }
+    </style>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/common.js"></script>
+    <script src="works/works.js"></script>
+    <title>Works</title>
+</head>
+<body>
+<div id="simbot-work-app" class="container">
+
+    <!-- 1 -->
+    <div class="col-xs-12 col-md-4 div-list">
+        <div class="thumbnail">
+            <!-- 头像区 -->
+            <div class="thumbnail-div">
+                <img src="https://q1.qlogo.cn/g?b=qq&nk=1149159218&s=640" alt="头像" class="img-circle head-img">
+            </div>
+            <!-- 信息区 -->
+            <div class="caption">
+                <div class="page-header">
+                    <h3>
+                        <strong>bot.nick</strong> <br>
+                        <small>账号：bot.code</small> <br>
+                        <small>等级：bot.level</small> <br>
+                        <small>状态：bot.status</small> <br>
+                        <small>看不到的东西：bot.old</small> <br>
+                    </h3>
+                </div>
+                <p><a href="..." class="btn btn-primary" role="button">信息</a></p>
+            </div>
+        </div>
+    </div>
+    <!-- 2 -->
+    <div class="col-xs-12 col-md-4 div-list">
+        <div class="thumbnail">
+            <!-- 头像区 -->
+            <div class="thumbnail-div">
+                <img src="https://q1.qlogo.cn/g?b=qq&nk=1149159218&s=640" alt="头像" class="img-circle head-img">
+            </div>
+            <!-- 信息区 -->
+            <div class="caption">
+                <div class="page-header">
+                    <h3>
+                        <strong>bot.nick</strong> <br>
+                        <small>账号：bot.code</small> <br>
+                        <small>等级：bot.level</small> <br>
+                        <small>状态：bot.status</small> <br>
+                        <small>看不到的东西：bot.old</small> <br>
+                    </h3>
+                </div>
+                <p><a href="..." class="btn btn-primary" role="button">信息</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script>
+    // 非常朴素的可爱vue
+    const sv = new Vue({
+        el: '#simbot-work-app',
+        data: {}
+    })
+
+
+</script>
+</html>

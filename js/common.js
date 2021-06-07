@@ -27,9 +27,26 @@ const WORK_BELONGING = {
 }
 
 deepFreeze(WORK_BELONGING)
-// Object.freeze()
-// Object.freeze(WORK_BELONGING.OFFICIAL)
-// Object.freeze(WORK_BELONGING.THIRD_PARTY)
+
+/**
+ * 根据一个value值查询belonging
+ * @param belongingValue
+ * @returns {null|{ value: Number, name: String }}
+ */
+function findWorkBelonging(belongingValue) {
+    if (!belongingValue) {
+        return null
+    }
+    for (let key in WORK_BELONGING) {
+        const it = WORK_BELONGING[key]
+        if (it.value === belongingValue) {
+            return it
+        }
+    }
+
+    return null
+}
+
 
 /**
  * 作品类型。作品类型是可以多选的。
@@ -102,6 +119,44 @@ const WORK_TYPE = {
 
 deepFreeze(WORK_TYPE)
 
+/**
+ * 根据 value 寻找一个作品类型。
+ * @param typeValue {Number}
+ * @returns {{name: string, value: number}|null}
+ */
+function findWorkType(typeValue) {
+    if (!typeValue) {
+        return null
+    }
+    for (let key in WORK_TYPE) {
+        const it = WORK_TYPE[key]
+        if (it.value === typeValue) {
+            return it
+        }
+    }
+    return null
+}
+
+function findWorkTypes(typeValues) {
+    if (!Array.isArray(typeValues) || !typeValues) {
+        return []
+    }
+
+    let result = []
+    let resultSet = new Set(typeValues)
+
+    for (let key in WORK_TYPE) {
+        const it = WORK_TYPE[key]
+        if (resultSet.has(it.value)) {
+            result.push(it)
+        }
+
+    }
+
+    return result
+
+}
+
 
 /**
  * 此作品的面向目标。一般就是代表是自用还是对公。
@@ -120,7 +175,6 @@ const TARGET_ORIENTED = {
 }
 
 deepFreeze(TARGET_ORIENTED)
-
 
 
 function deepFreeze(obj) {
