@@ -2,42 +2,61 @@
     需要在 common.js 之后加载
  */
 
-
-Vue.component('simbot-work', {
-    props: [],
-    data: function () {
-        return {
-            works: {
-
-            }
-        }
-    }
-})
-
 /*
  * 作品集，通过add追加一个作品。
  */
 const WORKS = {
-
+    works: [],
 
     /**
      *
-     * @param work
+     * @param work {{
+     *      id: String,
+     *      name: String,
+     *      logo: String,
+     *      description: String,
+     *      belonging: Number,
+     *      type: Number[],
+     *      home: { name: String|null, url: String },
+     *      detailPage: String|null,
+     *      author: {
+     *          name: String,
+     *          email: String|null,
+     *          qq: String|null,
+     *          avatar: String|null
+     *      }
+     * }}
      */
     add(work) {
-        console.log(work.name)
+        this.works.push(work)
     }
 }
 
-deepFreeze(WORKS)
+function checkWork(work) {
+    if (work)
+
+    throw "No!"
+}
+
 
 
 //
 const WORK_SHOW = {
+
+    /**
+     * 作品ID, 与你的文件夹名称一致，用于获取路径下资源。
+     */
+    id: String,
+
     /**
      * 作品的名称。可以简短一些。
      */
     name: String,
+
+    /**
+     * 作品的logo。
+     */
+    logo: String,
 
     /**
      * 作品的描述
@@ -77,10 +96,10 @@ const WORK_SHOW = {
     author: {
         /** 作者的名称 */
         name: String,
-        /** 联系方式 */
-        contact: String,
+        /** 联系邮箱 */
+        email: String,
         /** 如果有的话，这是个QQ号，可用于快速添加好友以及显示QQ头像。 */
-        qq: Number,
+        qq: String,
         /** 可以自己指定一个头像链接。 */
         avatar: String
     },
