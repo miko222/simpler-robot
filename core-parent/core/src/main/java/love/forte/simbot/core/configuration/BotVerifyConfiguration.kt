@@ -12,29 +12,16 @@
  *
  */
 
-package love.forte.test.listener
+package love.forte.simbot.core.configuration
 
-import love.forte.simbot.annotation.OnGroup
-import love.forte.simbot.annotation.OnPrivate
-import love.forte.simbot.filter.AtDetection
 
 /**
+ *
+ * Bot验证信息配置类，用于读取并解析各种bot配置文件。
+ *
+ * 目前支持 `properties` 格式文件与 `yml` 格式文件。
+ *
  * @author ForteScarlet
  */
-// @Beans
-class TestListener {
-
-
-    @OnGroup
-    fun a(at: AtDetection){
-        println("A Gro: ${at.atBot()}")
-    }
-
-    @OnPrivate
-    fun b(at: AtDetection){
-        println("B Pri: ${at.atBot()}")
-    }
-
-
+public class BotVerifyConfiguration {
 }
-

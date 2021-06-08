@@ -5,7 +5,7 @@
     <parent>
         <artifactId>core-parent</artifactId>
         <groupId>love.forte.simple-robot</groupId>
-        <version>2.0.9-snapshot</version><!--v-->
+        <version>2.1.0-DEV.1</version><!--v-->
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -45,19 +45,12 @@
             <groupId>love.forte</groupId>
             <artifactId>catcode</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!--</editor-fold>-->
 
         <!-- slf4j api, 不强制使用 -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <optional>true</optional>
         </dependency>
 
     </dependencies>
@@ -67,14 +60,6 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
             </plugin>
 
         </plugins>
