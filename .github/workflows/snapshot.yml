@@ -53,11 +53,11 @@ jobs:
           # Password for your Nexus account
           nexus_password: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
           # Nexus server ID as specified in your project's `nexus-staging-maven-plugin` and `distributionManagement` configurations
-          server_id: snapshots-oss
+          server_id: snapshots-oss 
           # Directory of the Maven project which should be deployed
-          directory: # optional
+#           directory: # optional
           # Maven goals and build phases to execute
-          maven_goals_phases: # optional, default is clean deploy
+#           maven_goals_phases: # optional, default is clean deploy
           # Additional arguments to pass to the Maven command
           maven_args: -B -e -U
           # Active Maven profiles
@@ -70,9 +70,10 @@ jobs:
 #          gpg_private_key: ${{ secrets.OSS_GPG_SECRET }}
 #          gpg_passphrase: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
 #          nexus_username: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
-         nexus_password: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
-        
-#       - name: Publish package
+#          nexus_password: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
+         
+ 
+         #       - name: Publish package
 #         run: mvn -DskipTests -B -e -U clean deploy -P snapshot,!release
 #         env:
 #           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
