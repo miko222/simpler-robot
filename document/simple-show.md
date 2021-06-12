@@ -94,6 +94,7 @@ public class TestListener {
     MessageContent msgContent = builder.at(accountCode).text(" 我在哦").build();
     // 发送消息
     sender.sendGroupMsg(msg, msgContent);
+    
   }
 }
 ```
