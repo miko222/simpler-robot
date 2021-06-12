@@ -43,12 +43,12 @@ jobs:
           gpg-private-key: ${{ secrets.OSS_GPG_SECRET }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
-      - name: Publish package
-        run: mvn --batch-mode -DskipTests -e -U clean deploy -P snapshot,!release
-        env:
-          MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
+#       - name: Publish package
+#         run: mvn --batch-mode -DskipTests -e -U clean deploy -P snapshot,!release
+#         env:
+#           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
+#           MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
+#           MAVEN_GPG_PASSPHRASE: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
           
     # Steps represent a sequence of tasks that will be executed as part of the job
     
@@ -73,29 +73,29 @@ jobs:
 # #           gpg-private-key: ${{ secrets.OSS_GPG_SECRET }}  
           
     
-#       - name: action-maven-publish
-#         # You may pin to the exact commit or the version.
-#         # uses: samuelmeuli/action-maven-publish@201a45a3f311b2ee888f252ba9f4194257545709
-#         uses: samuelmeuli/action-maven-publish@v1.4.0
-#         with:
-#           # GPG private key for signing the published artifacts
-#           gpg_private_key: ${{ secrets.OSS_GPG_SECRET }}
-#           # Passphrase for the GPG key
-#           gpg_passphrase: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
-#           # Username (not email!) for your Nexus repository manager account
-#           nexus_username: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
-#           # Password for your Nexus account
-#           nexus_password: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
-#           # Nexus server ID as specified in your project's `nexus-staging-maven-plugin` and `distributionManagement` configurations
-#           server_id: snapshots-oss 
-#           # Directory of the Maven project which should be deployed
-# #           directory: # optional
-#           # Maven goals and build phases to execute
-# #           maven_goals_phases: # optional, default is clean deploy
-#           # Additional arguments to pass to the Maven command
-#           maven_args: -B -e -U
-#           # Active Maven profiles
-#           maven_profiles: snapshots-oss
+      - name: action-maven-publish
+        # You may pin to the exact commit or the version.
+        # uses: samuelmeuli/action-maven-publish@201a45a3f311b2ee888f252ba9f4194257545709
+        uses: samuelmeuli/action-maven-publish@v1.4.0
+        with:
+          # GPG private key for signing the published artifacts
+          gpg_private_key: ${{ secrets.OSS_GPG_SECRET }}
+          # Passphrase for the GPG key
+          gpg_passphrase: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
+          # Username (not email!) for your Nexus repository manager account
+          nexus_username: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
+          # Password for your Nexus account
+          nexus_password: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
+          # Nexus server ID as specified in your project's `nexus-staging-maven-plugin` and `distributionManagement` configurations
+          server_id: snapshot
+          # Directory of the Maven project which should be deployed
+#           directory: # optional
+          # Maven goals and build phases to execute
+#           maven_goals_phases: # optional, default is clean deploy
+          # Additional arguments to pass to the Maven command
+          maven_args: -B -e -U
+          # Active Maven profiles
+          maven_profiles: snapshot
    
 
 # #       - name: Publish to Maven Central Repo
