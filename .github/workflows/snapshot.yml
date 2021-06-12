@@ -37,14 +37,14 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           server-id: snapshot
-#           server-username: MAVEN_USERNAME
-#           server-password: MAVEN_PASSWORD
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
 #           gpg-passphrase: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
           gpg-private-key: ${{ secrets.OSS_GPG_SECRET }}
-#           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Publish package
-        run: mvn -DskipTests -e clean deploy -P snapshot,!release --settings ./.mvn/settings.xml -Dlicense.skip=true
+        run: mvn -DskipTests -e clean deploy -P snapshot,!release -Dlicense.skip=true
         env:
           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
