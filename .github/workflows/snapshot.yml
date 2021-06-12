@@ -50,7 +50,7 @@ jobs:
         run: chmod -R 777 *
           
       - name: Publish package
-        run: ./mvnw -DskipTests -B -e clean deploy -P snapshot,!release -Dlicense.skip=true
+        run: ./mvnw -DskipTests -B -e --settings ./.mvn/settings.xml clean deploy -P snapshot,!release -Dlicense.skip=true
         env:
           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
