@@ -764,7 +764,7 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>snapshots-oss</id>
+            <id>snapshot</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
 
@@ -795,7 +795,7 @@
             <id>snapshot</id>
             <repositories>
                 <repository>
-                    <id>snapshots-oss</id>
+                    <id>snapshot</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                     <releases>
                         <enabled>false</enabled>
