@@ -44,7 +44,7 @@ jobs:
 #           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Publish package
-        run: mvn --batch-mode -DskipTests -e -U clean deploy -P snapshot,!release --settings ./.mvn/settings.xml -Dlicense.skip=true
+        run: mvn -DskipTests -e clean deploy -P snapshot,!release --settings ./.mvn/settings.xml -Dlicense.skip=true
         env:
           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
