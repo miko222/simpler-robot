@@ -16,6 +16,13 @@ package love.forte.test
 
 import love.forte.simbot.utils.ResourcePathExpression
 import love.forte.simbot.utils.readToProperties
+import java.nio.file.FileVisitResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.attribute.BasicFileAttributes
+import kotlin.io.path.Path
+import kotlin.io.path.extension
 import kotlin.test.Test
 
 
@@ -70,7 +77,7 @@ class ResourcePathExpressionUtilTest {
 
         println(resource.name)
 
-        val prop = resource.readToProperties()
+        // val prop = resource.readToProperties()
 
     }
 
@@ -86,10 +93,34 @@ class ResourcePathExpressionUtilTest {
             println(it.inputStream.use { inp -> inp.reader().readText() })
             println("==============================================")
         }
+    }
+
+
+    @Test
+    fun paths() {
+        val root = "bots1"
+
+        val list = mutableListOf<Path>()
+
+        Files.walkFileTree(Path(root), FileVisitorByExtension("bot", list))
+
+        println(list)
+
 
 
     }
 
+    internal class FileVisitorByExtension(private val extension: String, private val collection: MutableList<Path>) : SimpleFileVisitor<Path>() {
+
+        override fun visitFile(file: Path?, attrs: BasicFileAttributes?): FileVisitResult {
+            requireNotNull(file)
+            if (file.extension == extension) {
+                collection.add(file)
+            }
+
+            return FileVisitResult.CONTINUE
+        }
+    }
 
 
 }
