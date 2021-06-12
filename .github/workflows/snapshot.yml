@@ -46,6 +46,9 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           gpg-private-key: ${{ secrets.OSS_GPG_SECRET }}
           
+      - name: chmod -R 777 *
+        run: chmod -R 777 *
+          
       - name: Publish package
         run: ./mvnw -DskipTests -B -e clean deploy -P snapshot,!release -Dlicense.skip=true
         env:
