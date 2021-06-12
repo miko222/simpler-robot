@@ -23,17 +23,19 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-          server-id: snapshots-oss
+          server-id: snapshot
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-          gpg-passphrase: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
+#           gpg-passphrase: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
           gpg-private-key: ${{ secrets.OSS_GPG_SECRET }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Publish package
-        run: mvn --batch-mode deploy
+        run: mvn --batch-mode -DskipTests -e -U clean deploy -P snapshot,!release
         env:
           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.SNAPSHOTS_OSS_GPG_PASSPHRASE }}
           
     # Steps represent a sequence of tasks that will be executed as part of the job
     
