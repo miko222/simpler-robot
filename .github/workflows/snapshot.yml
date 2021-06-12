@@ -18,6 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Cache
+        uses: actions/cache@v2.1.6
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ~/.m2
+          # An explicit key for restoring and saving the cache
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      
+      
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v2
         with:
@@ -31,7 +44,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Publish package
-        run: mvn --batch-mode -DskipTests -e -U clean deploy -P snapshot,!release
+        run: mvn --batch-mode -DskipTests -e -U clean verify deploy -P snapshot,!release
         env:
           MAVEN_USERNAME: ${{ secrets.SNAPSHOTS_OSS_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.SNAPSHOTS_OSS_PASSWORD }}
