@@ -61,7 +61,6 @@ class Test2 {
                         close()
                     }
                 }
-
             }
             awaitClose {
                 println("Flow closed! by await")
