@@ -142,4 +142,14 @@ tasks.create("readmeGenerator") {
     val readme = File(projectDir, "README.md")
     println(" >>>>> Readme: $readme") // TODO
 
+    val rmt1 = File(File(projectDir, ".readme_template"), "USE.rmt")
+    println(" >>>>> rmt1: $rmt1") // TODO
+
+    rmt1.useLines { lines ->
+        lines.map { line -> line.replace("{{{PROJECT.VERSION}}}", project.version.toString()) }
+            .forEach {
+                println(">> $it")
+            }
+    }
+
 }
