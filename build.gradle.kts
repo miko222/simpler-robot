@@ -135,3 +135,11 @@ idea {
         isDownloadSources = true
     }
 }
+
+
+tasks.create("readmeGenerator") {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    val readme = File(projectDir, "README.md")
+    println(" >>>>> Readme: $readme") // TODO
+
+}

@@ -1,0 +1,36 @@
+## 使用
+
+> Warn: 对于组件, 你需要去上面提及的组件仓库中选择你需要使用的.
+> 一个普通的simbot依赖不会有任何实现, 因此下述提及的依赖使用**不能**独立使用。
+>
+
+### simbot-core
+
+#### Maven
+
+```xml
+<!-- simbot核心标准库 -->
+<dependency>
+    <groupId>love.forte.simbot</groupId>
+    <artifactId>simbot-core</artifactId>
+    <version>{{{PROJECT.VERSION}}}</version>
+</dependency>
+```
+
+#### Gradle Kotlin DSL
+
+```kotlin
+val simbotVersion = simbot - core的版本号
+
+// simbot核心标准库
+implementation("love.forte.simbot:simbot-core:{{{PROJECT.VERSION}}}")
+```
+
+#### Gradle Groovy
+
+```groovy
+simbotVersion = simbot - core的版本号
+
+// simbot核心标准库
+implementation "love.forte.simbot:simbot-core:{{{PROJECT.VERSION}}}"
+```
